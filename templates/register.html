@@ -1,0 +1,226 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Mirrored from adminuiux.com/adminuiux/digiclinic-uiux/clinic-signup.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 12 Apr 2025 21:50:17 GMT -->
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>MediSense - Sign Up</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'assets/img/Medisence.png' %}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&amp;family=Oxygen:wght@400;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --adminuiux-content-font: "Open Sans";
+        --adminuiux-content-font-weight: 400;
+        --adminuiux-title-font: "Oxygen", sans-serif;
+        --adminuiux-title-font-weight: 700;
+      }
+    </style>
+    <script defer="defer" src="{% static 'assets/js/app0d28.js' %}"></script>
+    <link href="{% static 'assets/css/app0d28.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="pageloader">
+      <div class="container h-100">
+        <div
+          class="row justify-content-center align-items-center text-center h-100"
+        >
+          <div class="col-12 mb-auto pt-4"></div>
+          <div class="col-auto">
+            <img
+              src="{% static 'assets/img/Medisence.png' %}"
+              alt=""
+              class="height-60 mb-3"
+            />
+            <p class="h6 mb-0">MediSense</p>
+            <p class="h3 mb-4">IA Assistant</p>
+            <div class="loaderplus mb-2"></div>
+          </div>
+          <div class="col-12 mt-auto pb-4">
+            <p class="text-secondary">
+              Please wait we are preparing awesome things to preview...
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <main class="flex-shrink-0 pt-0 h-100">
+      <div class="container-fluid">
+        <div class="auth-wrapper">
+          <div class="row">
+            <div
+              class="col-12 col-md-6 col-lg-6 minvheight-100 d-flex flex-column px-0"
+            >
+              <header class="adminuiux-header">
+                <nav class="navbar">
+                  <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'login_view' %}">
+                      <img
+                        src="{% static 'assets/img/Medisence.png' %}"
+                        alt=""
+                        class="me-3"
+                      />
+
+                      <div class="d-block">
+                        <span class="company-name text-uppercase h4"
+                          ><b>Medi</b>Sense</span
+                        >
+                        <p class="company-tagline">IA Assistant</p>
+                      </div></a
+                    >
+                    <div class="ms-auto"></div>
+                    <div class="ms-auto"></div>
+                  </div>
+                </nav>
+              </header>
+              <div class="h-100 py-3 px-3">
+                <div
+                  class="row h-100 align-items-center justify-content-center"
+                >
+                  <div class="col-12 col-md-10 col-lg-8 col-xxl-6 login-box">
+                    <div class="text-center mb-4">
+                      <h1 class="mb-2">WELCOME</h1>
+                      <p class="lead text-secondary">Sign Up</p>
+                      {% if messages %}
+                      <div class="container mt-3">
+                        {% for message in messages %}
+                        <div
+                          class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+                        >
+                          <p>{{ message }}</p>
+                        </div>
+                        {% endfor %}
+                      </div>
+                      {% endif %}
+                    </div>
+                    <form method="post">
+                      {% csrf_token %}
+                      <div class="form-floating mb-3">
+                        {{ form.username }}
+                        <label for="{{ form.username.id_for_label }}"
+                          >Username</label
+                        >
+                      </div>
+                      <div class="form-floating mb-3">
+                        {{ form.email }}
+                        <label for="{{ form.email.id_for_label }}"
+                          >Email Address</label
+                        >
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <div class="form-floating mb-3">
+                            {{ form.password1 }}
+                            <label for="{{ form.password1.id_for_label }}"
+                              >Password</label
+                            >
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-floating mb-3">
+                            {{ form.password2 }}
+                            <label for="{{ form.password2.id_for_label }}"
+                              >Confirm Password</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-check mb-3">
+                            {{ form.is_doctor }}
+                            <label
+                              for="{{ form.is_doctor.id_for_label }}"
+                              class="form-check-label"
+                              >Doctor</label
+                            >
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-check mb-3">
+                            {{ form.is_assistant }}
+                            <label
+                              for="{{ form.is_assistant.id_for_label }}"
+                              class="form-check-label"
+                              >Assistant</label
+                            >
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-check mb-3">
+                            {{ form.is_patient }}
+                            <label
+                              for="{{ form.is_patient.id_for_label }}"
+                              class="form-check-label"
+                              >Patient</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        class="btn btn-lg btn-theme w-100 mb-4"
+                      >
+                        Sign up
+                      </button>
+                    </form>
+                    <div class="text-center mb-3">
+                      Already have account?
+                      <a href="{% url 'login_view' %}" class="">Login</a> here.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-6 bg-theme-r-gradient px-0 d-none d-md-block"
+            >
+              <div
+                class="row vh-100 d-flex flex-column justify-content-center gx-0 text-center"
+              >
+                <div
+                  class="col-10 col-md-10 col-lg-8 mt-auto mb-4 mb-lg-5 mx-auto"
+                >
+                  <h1 class="text-white mb-4">
+                    Join us and explore unlimited possibilities for creating &
+                    managing clinical appointments.
+                  </h1>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3 mt-0 mx-auto"
+                >
+                  <img
+                    src="{% static 'assets/img/clinic/clinic-doctor-login.png' %}"
+                    alt=""
+                    class="w-100"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="adminuiux-footer mt-auto">
+      <div class="container-fluid text-center">
+        <span class="small">Copyright @2024</span>
+      </div>
+    </footer>
+    <script src="{% static 'assets/js/clinic/clinic-auth.js' %}"></script>
+  </body>
+</html>
