@@ -1,0 +1,439 @@
+<title>MediSense - Settings</title>
+{% include 'partials/header.html' %}
+<div class="adminuiux-wrap">
+  {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
+  <main class="adminuiux-content has-sidebar" onclick="contentClick()">
+    <div class="container-fluid mt-3">
+      <div class="bg-theme-1-subtle rounded px-3 py-3">
+        <div class="row gx-3 align-items-center">
+          <div class="col col-sm mb-2 mb-sm-0">
+            <p class="h5">Settings</p>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'dashboard' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item active bi" aria-current="page">
+                  Settings
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-4" id="main-content">
+      <div class="row">
+        <div class="col-12 col-md-4 col-lg-4 col-xl-3">
+          <div class="position-sticky" style="top: 5.5rem">
+            <ul class="nav nav-pills adminuiux-nav-pills flex-column mb-4">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="{% url 'settings' %}"
+                  ><div class="avatar avatar-28 icon">
+                    <i data-feather="user"></i>
+                  </div>
+                  <div class="col">
+                    <p class="h6 mb-0">My Profile</p>
+                    <p class="small opacity-75">Basic Details</p>
+                  </div></a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card adminuiux-card mb-4">
+              <figure class="coverimg w-100 height-250 mb-0 position-relative rounded">
+                <div class="position-absolute top-0 end-0 m-2">
+                  <button class="btn btn-theme" onclick="document.getElementById('coverInput').click()">
+                    <i class="bi bi-camera"></i> Change Cover
+                  </button>
+                  <!-- Input hidden pour la couverture -->
+                  <input type="file" id="coverInput" class="d-none" name="cover_image" onchange="changeCoverImage(event)" />
+                </div>
+                <img
+                  id="coverImage"
+                  src="{{ form.cover_image.value|default:'static/assets/img/modern-ai-image/modern-bg-4.jpg' }}"
+                  class="mw-100"
+                  alt="Cover Image"
+                />
+              </figure>
+
+              <div class="row align-items-start justify-content-center mb-3">
+                <div class="col-auto position-relative">
+                  <figure
+                    class="avatar avatar-150 coverimg rounded-circle mt--75"
+                  >
+                    <!-- Utiliser l'image de profil actuelle si disponible, sinon utiliser une image par défaut -->
+                    <img
+                      src="{{ form.profile_image.value|default:'static/assets/img/modern-ai-image/user-4.jpg' }}"
+                      alt="Profile Image"
+                    />
+                  </figure>
+                  <div
+                    class="position-absolute bottom-0 end-0 z-index-1 me-3 mb-1 h-auto"
+                  >
+                    <button
+                      class="btn btn-accent btn-square"
+                      onclick="$(this).next().click()"
+                    >
+                      <i class="bi bi-camera"></i>
+                    </button>
+                    <!-- Input caché pour télécharger une nouvelle image de profil -->
+                    <input type="file" class="d-none" name="profile_image" />
+                  </div>
+                </div>
+              </div>
+
+                <div class="card-body">
+                  <p class="title h6 mb-3">Basic Details</p>
+                  <div class="row mb-2">
+                        <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating mb-3">
+                            <input
+                              type="text"
+                              name="first_name"
+                              id="id_first_name"
+                              class="form-control"
+                              placeholder="First Name"
+                              value="{{ form.first_name.value|default:'' }}"
+                              required="true"
+                            />
+                            <label for="id_first_name">First Name</label>
+                          </div>
+                          {% if form.first_name.errors %}
+                          <div class="invalid-feedback">
+                            {% for error in form.first_name.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating mb-3">
+                            <!-- Utilisation de {{ form.last_name }} avec la classe form-control -->
+                            <input
+                              type="text"
+                              name="last_name"
+                              id="id_last_name"
+                              class="form-control"
+                              placeholder="Last Name"
+                              value="{{ form.last_name.value|default:'' }}"
+                              required="true"
+                            />
+                            <label for="id_last_name">Last Name</label>
+                          </div>
+                          <!-- Affichage des erreurs si le champ n'est pas valide -->
+                          {% if form.last_name.errors %}
+                          <div class="invalid-feedback">
+                            {% for error in form.last_name.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating">
+                            <input
+                              type="email"
+                              class="form-control"
+                              value="{{ user_email }}"
+                              disabled
+                              required
+                              placeholder="Email Address"
+                            />
+                            <label>Email Address</label>
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating mb-3">
+                            <input
+                              type="date"
+                              name="birth_date"
+                              id="id_birth_date"
+                              class="form-control datepicker"
+                              placeholder="Birth Date"
+                              value="{{ form.initial.birth_date|date:'Y-m-d' }}"
+                              required="true"
+                            />
+                            <label for="id_birth_date">Birth Date</label>
+                          </div>
+                          {% if form.birth_date.errors %}
+                          <div class="invalid-feedback">
+                            {% for error in form.birth_date.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating mb-3">
+                              <select class="form-select" name="blood_group" id="id_blood_group" required="true">
+                                  <option value="A" {% if form.blood_group.value == 'A' %}selected{% endif %}>A</option>
+                                  <option value="A+" {% if form.blood_group.value == 'A+' %}selected{% endif %}>A+</option>
+                                  <option value="B" {% if form.blood_group.value == 'B' %}selected{% endif %}>B</option>
+                                  <option value="B+" {% if form.blood_group.value == 'B+' %}selected{% endif %}>B+</option>
+                                  <option value="B-" {% if form.blood_group.value == 'B-' %}selected{% endif %}>B-</option>
+                                  <option value="O" {% if form.blood_group.value == 'O' %}selected{% endif %}>O</option>
+                                  <option value="O-" {% if form.blood_group.value == 'O-' %}selected{% endif %}>O-</option>
+                              </select>
+                              <label for="id_blood_group">Blood Group</label>
+                          </div>
+                          {% if form.blood_group.errors %}
+                          <div class="invalid-feedback">
+                              {% for error in form.blood_group.errors %}
+                              <p>{{ error }}</p>
+                              {% endfor %}
+                          </div>
+                          {% endif %}
+                      </div>
+                  
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input 
+                                type="number" 
+                                name="weight" 
+                                id="id_weight" 
+                                class="form-control" 
+                                placeholder="Weight" 
+                                value="{{ form.weight.value|default:'' }}" 
+                                required="true"
+                                min="0" 
+                                step="0.1"
+                            />
+                            <label for="id_weight">Weight (kg)</label>
+                        </div>
+                        {% if form.weight.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.weight.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                  </div>
+                  <p class="title h6 mb-3">Address Details</p>
+                  <div class="row mb-2">
+                        <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating mb-3">
+                              <input 
+                                  type="text" 
+                                  name="address_line1" 
+                                  id="id_address_line1" 
+                                  class="form-control" 
+                                  placeholder="Address Line 1" 
+                                  value="{{ form.address_line1.value|default:'' }}" 
+                                  required="true"
+                              />
+                              <label for="id_address_line1">Address Line 1</label>
+                          </div>
+                          {% if form.address_line1.errors %}
+                          <div class="invalid-feedback">
+                              {% for error in form.address_line1.errors %}
+                              <p>{{ error }}</p>
+                              {% endfor %}
+                          </div>
+                          {% endif %}
+                      </div>
+                      
+                      <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating mb-3">
+                              <input 
+                                  type="text" 
+                                  name="address_line2" 
+                                  id="id_address_line2" 
+                                  class="form-control" 
+                                  placeholder="Address Line 2" 
+                                  value="{{ form.address_line2.value|default:'' }}" 
+                                  required="true"
+                              />
+                              <label for="id_address_line2">Address Line 2</label>
+                          </div>
+                          {% if form.address_line2.errors %}
+                          <div class="invalid-feedback">
+                              {% for error in form.address_line2.errors %}
+                              <p>{{ error }}</p>
+                              {% endfor %}
+                          </div>
+                          {% endif %}
+                      </div>
+                      
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input 
+                                type="text" 
+                                name="landmark" 
+                                id="id_landmark" 
+                                class="form-control" 
+                                placeholder="Landmark" 
+                                value="{{ form.landmark.value|default:'' }}" 
+                                required="true"
+                            />
+                            <label for="id_landmark">Landmark</label>
+                        </div>
+                        {% if form.landmark.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.landmark.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input 
+                                type="text" 
+                                name="street" 
+                                id="id_street" 
+                                class="form-control" 
+                                placeholder="Street" 
+                                value="{{ form.street.value|default:'' }}" 
+                                required="true"
+                            />
+                            <label for="id_street">Street</label>
+                        </div>
+                        {% if form.street.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.street.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input 
+                                type="text" 
+                                name="country" 
+                                id="id_country" 
+                                class="form-control" 
+                                placeholder="Country" 
+                                value="{{ form.country.value|default:'' }}" 
+                                required="true"
+                            />
+                            <label for="id_country">Country</label>
+                        </div>
+                        {% if form.country.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.country.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <div class="form-floating mb-3">
+                          <input 
+                              type="text" 
+                              name="pincode" 
+                              id="id_pincode" 
+                              class="form-control" 
+                              placeholder="Pincode" 
+                              value="{{ form.pincode.value|default:'' }}" 
+                              required="true"
+                          />
+                          <label for="id_pincode">Pincode</label>
+                      </div>
+                      {% if form.pincode.errors %}
+                      <div class="invalid-feedback">
+                          {% for error in form.pincode.errors %}
+                          <p>{{ error }}</p>
+                          {% endfor %}
+                      </div>
+                      {% endif %}
+                  </div>
+                  
+                  <div class="col-12 col-md-6 col-lg-4">
+                      <div class="form-floating mb-3">
+                          <input 
+                              type="text" 
+                              name="state" 
+                              id="id_state" 
+                              class="form-control" 
+                              placeholder="State" 
+                              value="{{ form.state.value|default:'' }}" 
+                              required="true"
+                          />
+                          <label for="id_state">State</label>
+                      </div>
+                      {% if form.state.errors %}
+                      <div class="invalid-feedback">
+                          {% for error in form.state.errors %}
+                          <p>{{ error }}</p>
+                          {% endfor %}
+                      </div>
+                      {% endif %}
+                  </div>
+                  
+                  <div class="col-12 col-md-6 col-lg-4">
+                      <div class="form-floating mb-3">
+                          <input 
+                              type="text" 
+                              name="city" 
+                              id="id_city" 
+                              class="form-control {% if form.city.errors %}is-invalid{% endif %}" 
+                              placeholder="City" 
+                              value="{{ form.city.value|default:'' }}" 
+                              required="true"
+                          />
+                          <label for="id_city">City</label>
+                      </div>
+                      {% if form.city.errors %}
+                      <div class="invalid-feedback">
+                          {% for error in form.city.errors %}
+                          <p>{{ error }}</p>
+                          {% endfor %}
+                      </div>
+                      {% endif %}
+                  </div>
+              
+                  </div>
+                  {% if user.is_doctor or user.is_assistant %}
+                      <p class="title h6 mb-3">Professional bio</p>
+                      <div class="mb-4">
+                          <textarea class="FroalaEditor" name="bio" id="id_bio">{{ form.bio.value|default:'' }}</textarea>
+                      </div>
+                      {% if form.bio.errors %}
+                          <div class="invalid-feedback">
+                              {% for error in form.bio.errors %}
+                                  <p>{{ error }}</p>
+                              {% endfor %}
+                          </div>
+                      {% endif %}
+                  {% endif %}
+
+
+                </div>
+                <div class="card-footer">
+                  <div class="row">
+                    <div class="col">
+                      <button type="submit" class="btn btn-theme">Save</button>
+                    </div>
+                    <div class="col-auto">
+                      <button class="btn btn-link">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %} {% include 'partials/footer.html' %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User,Profile
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -47,3 +47,10 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'is_doctor', 'is_assistant', 'is_patient']
+        
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'birth_date', 'blood_group', 'weight', 
+                  'address_line1', 'address_line2', 'landmark', 'street', 'country', 
+                  'pincode', 'state', 'city', 'bio', 'profile_image', 'cover_image']

@@ -1,0 +1,207 @@
+<div class="adminuiux-sidebar">
+  {% load static %}
+  <div class="adminuiux-sidebar-inner">
+    <div class="px-3 not-iconic mt-3">
+      <div class="row">
+        <div class="col align-self-center">
+          <p class="h6">Main Menu</p>
+        </div>
+        <div class="col-auto">
+          <a
+            class="btn btn-link btn-square"
+            data-bs-toggle="collapse"
+            data-bs-target="#usersidebarprofile"
+            aria-expanded="false"
+            role="button"
+            aria-controls="usersidebarprofile"
+            ><i data-feather="user"></i
+          ></a>
+        </div>
+      </div>
+      <div class="text-center collapse" id="usersidebarprofile">
+        <figure class="avatar avatar-100 rounded-circle coverimg my-3">
+          <img
+            src="{% static 'assets/img/modern-ai-image/user-4.jpg' %}"
+            alt=""
+          />
+        </figure>
+        {% if user.is_authenticated %}
+        <p class="mb-1 h5">{{ user.get_full_name|default:user.username }}</p>
+
+        {% if user.is_doctor %}
+        <p class="small">Doctor</p>
+        {% elif user.is_assistant %}
+        <p class="small">Assistant</p>
+        {% elif user.is_patient %}
+        <p class="small">Patient</p>
+        {% else %}
+        <p class="small">Unknown Role</p>
+        {% endif %} {% endif %}
+      </div>
+    </div>
+    <ul class="nav flex-column menu-active-line my-3">
+      <li class="nav-item">
+        <a href="{% url 'dashboard' %}" class="nav-link"
+          ><i class="menu-icon" data-feather="grid"></i>
+          <span class="menu-name">Dashboard</span></a
+        >
+      </li>
+      {% comment %}
+      <li class="nav-item dropdown">
+        <a
+          href="javascrit:void(0)"
+          class="nav-link dropdown-toggle"
+          data-bs-toggle="dropdown"
+          ><i class="menu-icon" data-feather="calendar"></i>
+          <span class="menu-name">Schedule</span></a
+        >
+        <div class="dropdown-menu">
+          <div class="nav-item">
+            <a href="clinic-schedule.html" class="nav-link"
+              ><i class="menu-icon" data-feather="calendar"></i>
+              <span class="menu-name">Schedule Calendar</span></a
+            >
+          </div>
+          <div class="nav-item">
+            <a href="clinic-schedule-grid.html" class="nav-link"
+              ><i class="menu-icon" data-feather="table"></i>
+              <span class="menu-name">Schedule List</span></a
+            >
+          </div>
+          <div class="nav-item">
+            <a href="clinic-schedule-cards.html" class="nav-link"
+              ><i class="menu-icon" data-feather="layers"></i>
+              <span class="menu-name">Schedule Progress</span></a
+            >
+          </div>
+          <div class="nav-item">
+            <a href="clinic-schedule-staff.html" class="nav-link"
+              ><i class="menu-icon" data-feather="user-check"></i>
+              <span class="menu-name">Schedule Staff</span></a
+            >
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="clinic-patients.html" class="nav-link"
+          ><i class="menu-icon" data-feather="users"></i>
+          <span class="menu-name">Patients</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a href="clinic-statistics.html" class="nav-link"
+          ><i class="menu-icon" data-feather="pie-chart"></i>
+          <span class="menu-name">Statistics</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a href="clinic-blogs.html" class="nav-link"
+          ><i class="menu-icon" data-feather="file-text"></i>
+          <span class="menu-name">My Publication</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a href="clinic-billing.html" class="nav-link"
+          ><i class="menu-icon bi bi-cash-stack"></i>
+          <span class="menu-name">Billings</span></a
+        >
+      </li>
+      {% endcomment %} {% comment %}
+      <li class="nav-item dropdown">
+        <a
+          href="javascrit:void(0)"
+          class="nav-link dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          ><i class="menu-icon" data-feather="folder"></i>
+          <span class="menu-name">Documents</span></a
+        >
+        <div class="dropdown-menu">
+          <div class="nav-item">
+            <a href="clinic-patients-documents.html" class="nav-link"
+              ><i class="menu-icon" data-feather="users"></i>
+              <span class="menu-name">Patient Documents</span></a
+            >
+          </div>
+          <div class="nav-item">
+            <a href="clinic-staff-documents.html" class="nav-link"
+              ><i class="menu-icon" data-feather="briefcase"></i>
+              <span class="menu-name">Staff Documents</span></a
+            >
+          </div>
+        </div>
+      </li>
+      {% endcomment %} {% comment %}
+      <li class="nav-item">
+        <a href="clinic-pages.html" class="nav-link"
+          ><i data-feather="layers" class="menu-icon"></i>
+          <span class="menu-name">Pages</span>
+          <span class="badge text-bg-primary mx-2">45+</span></a
+        >
+      </li>
+      {% endcomment %} {% comment %}
+      <li class="nav-item">
+        <a href="clinic-personalization.html" class="nav-link"
+          ><i class="menu-icon bi bi-palette h4"></i>
+          <span class="menu-name">Personalize ❤️</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="components.html"
+          ><i data-feather="cpu" class="menu-icon"></i>
+          <span class="menu-name">Components</span></a
+        >
+      </li>
+      {% endcomment %}
+    </ul>
+    <div class="mt-auto"></div>
+    {% comment %}
+    <div class="px-3 mb-3 not-iconic">
+      <p class="mb-3 h6">Quick Links</p>
+      <div class="card border-0">
+        <div class="card-body p-2">
+          <div class="row gx-2">
+            <div class="col-12 d-flex justify-content-between">
+              <a href="clinic-myprofile.html" class="btn btn-square btn-link"
+                ><span class="position-relative"
+                  ><i data-feather="user"></i>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle p-1 bg-success rounded-circle"
+                    ><span class="visually-hidden">New alerts</span>
+                  </span></span
+                ></a
+              ><a href="clinic-schedule.html" class="btn btn-square btn-link"
+                ><span class="position-relative"
+                  ><i data-feather="calendar"></i>
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle p-1 bg-warning rounded-circle"
+                    ><span class="visually-hidden">New alerts</span>
+                  </span></span
+                ></a
+              ><a href="clinic-inbox.html" class="btn btn-square btn-link"
+                ><i data-feather="inbox"></i> </a
+              ><a href="clinic-help-center.html" class="btn btn-square btn-link"
+                ><i data-feather="help-circle"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endcomment %}
+    <ul class="nav flex-column menu-active-line">
+      <li class="nav-item">
+        <a href="clinic-chat-call.html" class="nav-link"
+          ><i class="menu-icon" data-feather="message-circle"></i>
+          <span class="menu-name">Chat & Calls</span></a
+        >
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'settings' %}" class="nav-link"
+          ><i class="menu-icon" data-feather="settings"></i>
+          <span class="menu-name">Settings</span></a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
