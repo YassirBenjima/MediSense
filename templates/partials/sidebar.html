@@ -21,7 +21,7 @@
       <div class="text-center collapse" id="usersidebarprofile">
         <figure class="avatar avatar-100 rounded-circle coverimg my-3">
           <img
-            src="{% static 'assets/img/modern-ai-image/user-4.jpg' %}"
+            src="{% if profile.profile_image %}{{ profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}"
             alt=""
           />
         </figure>

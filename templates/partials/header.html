@@ -709,7 +709,7 @@
                   <div class="col-auto align-self-center">
                     <figure class="avatar avatar-28 rounded-circle coverimg vm">
                       <img
-                        src="{% static 'assets/img/modern-ai-image/user-4.jpg' %}"
+                        src="{% if profile.profile_image %}{{ profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}"
                         alt=""
                         id="userphotoonboarding2"
                       />
@@ -737,7 +737,7 @@
                         class="avatar avatar-50 rounded-circle coverimg vm"
                       >
                         <img
-                          src="{% static 'assets/img/modern-ai-image/user-4.jpg' %}"
+                          src="{% if profile.profile_image %}{{ profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}"
                           alt=""
                         />
                       </figure>

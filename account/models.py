@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import os
+
 # Create your models here.
 
 class User(AbstractUser):
@@ -39,6 +41,8 @@ class Profile(models.Model):
             self.country
         ]
         return ', '.join([part for part in address_parts if part])
-    
 
+def delete_old_file(file_field):
+    if file_field and os.path.isfile(file_field.path):
+        os.remove(file_field.path)
 

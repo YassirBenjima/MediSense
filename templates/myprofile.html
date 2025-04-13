@@ -32,7 +32,7 @@
     <div class="container mt-4" id="main-content">
       <div class="coverimg height-250 w-100 rounded position-relative">
         <img
-          src="{% static 'assets/img/modern-ai-image/modern-bg-4.jpg' %}"
+          src="{% if profile.cover_image %}{{ profile.cover_image.url }}{% else %}{% static 'assets/img/modern-ai-image/modern-bg-4.jpg' %}{% endif %}"
           alt=""
           class="d-none"
         />
@@ -41,7 +41,7 @@
         <div class="col-12 col-md-auto text-center">
           <figure class="avatar avatar-150 rounded-circle coverimg mx-3">
             <img
-              src="{% static 'assets/img/modern-ai-image/user-4.jpg' %}"
+              src="{% if profile.profile_image %}{{ profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}"
               alt=""
               class="d-none"
             />
