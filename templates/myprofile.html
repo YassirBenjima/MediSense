@@ -69,11 +69,11 @@
               </p>
               {% elif user.is_assistant %}
               <p>
-                <small class="opacity-50">Assistant</small>
+                <small class="opacity-50">Assistant | {{ profile.phone }}</small>
               </p>
               {% elif user.is_patient %}
               <p>
-                <small class="opacity-50">Patient</small>
+                <small class="opacity-50">Patient | {{ profile.phone }}</small>
               </p>
               {% else %}
               <p>
