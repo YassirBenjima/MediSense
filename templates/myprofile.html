@@ -65,7 +65,7 @@
               </p>
               {% endif %} {% if user.is_authenticated %} {% if user.is_doctor %}
               <p>
-                <small class="opacity-50">Doctor</small>
+                <small class="opacity-50">Doctor | {{ profile.phone }} </small>
               </p>
               {% elif user.is_assistant %}
               <p>

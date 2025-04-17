@@ -27,6 +27,8 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     cover_image = models.ImageField(upload_to='cover_images/', blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+
     def __str__(self):
         return f"{self.user.username} Profile"
     def full_address(self):

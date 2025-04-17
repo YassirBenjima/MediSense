@@ -134,7 +134,28 @@
                             <label>Email Address</label>
                           </div>
                         </div>
-
+                        <div class="col-12 col-md-6 col-lg-4">
+                          <div class="form-floating mb-3">
+                            <input
+                              type="text"
+                              name="phone"
+                              id="id_phone"
+                              class="form-control"
+                              placeholder="Phone"
+                              value="{{ form.phone.value|default:'' }}"
+                              required="true"
+                            />
+                            <label for="id_phone">Phone</label>
+                          </div>
+                          {% if form.phone.errors %}
+                          <div class="invalid-feedback">
+                            {% for error in form.phone.errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                        </div>
+                        
                         <div class="col-12 col-md-6 col-lg-4">
                           <div class="form-floating mb-3">
                             <input
