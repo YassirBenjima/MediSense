@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm,LoginForm,ProfileForm
 from django.contrib.auth import authenticate , login
 from django.contrib import messages
-from .models import Profile,delete_old_file  
+from .models import Profile,delete_old_file,User
 from datetime import date
 
 # Create your views here.
@@ -96,3 +96,13 @@ def calculate_age(birth_date):
     if birth_date:
         return today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
     return None
+
+@login_required
+def liste_patients(request):
+    user_email = request.user.email
+    patients = User.objects.filter(is_patient=True).select_related('profile')
+    context = {
+        'patients': patients,
+        'user_email':user_email,
+    }
+    return render(request, 'patients/liste_patients.html', context)
