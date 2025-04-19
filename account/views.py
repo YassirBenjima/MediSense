@@ -1,10 +1,11 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm,LoginForm,ProfileForm
+from .forms import SignUpForm,LoginForm,ProfileForm,UserForm
 from django.contrib.auth import authenticate , login
 from django.contrib import messages
 from .models import Profile,delete_old_file,User
 from datetime import date
+from django.db.models import Q
 
 # Create your views here.
 # def index(request):
@@ -73,14 +74,11 @@ def profile_settings(request):
             new_profile_image = request.FILES.get('profile_image')
             new_cover_image = request.FILES.get('cover_image')
 
-            # Supprimer les anciennes images AVANT d'écraser les champs
             if new_profile_image and old_profile_image:
                 delete_old_file(profile.profile_image)
 
             if new_cover_image and old_cover_image:
                 delete_old_file(profile.cover_image)
-
-            # Maintenant, sauvegarder les nouvelles images
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
@@ -100,9 +98,127 @@ def calculate_age(birth_date):
 @login_required
 def liste_patients(request):
     user_email = request.user.email
+    search_query = request.GET.get('search', '')
+    blood_group = request.GET.get('blood_group', '')
+
     patients = User.objects.filter(is_patient=True).select_related('profile')
+
+    # Filtres
+    if search_query:
+        patients = patients.filter(
+            Q(username__icontains=search_query) |
+            Q(profile__first_name__icontains=search_query) |
+            Q(profile__last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(profile__city__icontains=search_query) |
+            Q(profile__country__icontains=search_query)
+        )
+
+    if blood_group:
+        patients = patients.filter(profile__blood_group=blood_group)
+
+    # Statistiques dynamiques
+    stable_count = 0
+    good_count = 0
+    critical_count = 0
+
+    age_25_plus = 0
+    age_16_30 = 0
+    age_0_15 = 0
+
+    for patient in patients:
+        profile = patient.profile
+        age = calculate_age(profile.birth_date)
+        weight = getattr(profile, 'weight', 0)
+
+        # Catégorisation santé selon âge et poids (à ajuster si besoin)
+        if 18 <= age <= 60 and 50 <= weight <= 90:
+            stable_count += 1
+        elif (age < 18 or age > 60) and (weight >= 45 and weight <= 95):
+            good_count += 1
+        else:
+            critical_count += 1
+
+        # Catégorisation par tranches d’âge
+        if age > 25:
+            age_25_plus += 1
+        elif 16 <= age <= 25:
+            age_16_30 += 1
+        else:
+            age_0_15 += 1
+
     context = {
         'patients': patients,
-        'user_email':user_email,
+        'user_email': user_email,
+        'stable_count': stable_count,
+        'good_count': good_count,
+        'critical_count': critical_count,
+        'age_25_plus': age_25_plus,
+        'age_16_30': age_16_30,
+        'age_0_15': age_0_15,
     }
+
     return render(request, 'patients/liste_patients.html', context)
+
+@login_required
+def add_patient(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = ProfileForm(request.POST, request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user.password)
+            user.is_patient = True
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            
+            messages.success(request, "Patient added successfully.")
+            return redirect('liste_patients')
+    else:
+        user_form = UserForm()
+        profile_form = ProfileForm()
+
+    return render(request, 'patients/add_patient.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+    
+@login_required
+def edit_patient(request, patient_id):
+    patient = get_object_or_404(User, id=patient_id)
+    profile = patient.profile
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=patient)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            password = request.POST.get('password')
+            if password:
+                user_form.instance.set_password(password)
+
+            user_form.save() 
+            profile_form.save() 
+
+            messages.success(request, "Patient updated successfully.")
+            return redirect('liste_patients')
+    else:
+        user_form = UserForm(instance=patient)
+        profile_form = ProfileForm(instance=profile)
+
+    return render(request, 'patients/edit_patient.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'patient': patient
+    })
+
+
+    
+@login_required
+def delete_patient(request, pk):
+    patient = get_object_or_404(User, pk=pk)
+    patient.delete()
+    messages.success(request, "Patient deleted successfully.")
+    return redirect('liste_patients')

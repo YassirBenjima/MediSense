@@ -1,3 +1,4 @@
+<title>MediSense - Patients</title>
 {% include 'partials/header.html' %}
 <div class="adminuiux-wrap">
   {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
@@ -19,7 +20,7 @@
             </nav>
           </div>
           <div class="col-auto py-1">
-            <a href="clinic-add-patient.html" class="btn btn-theme"
+            <a href="{% url 'add_patient' %}" class="btn btn-theme"
               ><i data-feather="plus" class="me-0 me-md-1"></i>
               <span class="d-none d-md-inline-block">Patient</span></a
             >
@@ -38,54 +39,66 @@
         </div>
       </div>
     </div>
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
     <div class="container" id="main-content">
       <div class="collapse" id="filterschedule">
         <div class="card adminuiux-card mt-4">
           <div class="card-body pb-0">
             <div class="row">
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <div class="form-floating">
-                  <input class="form-control" placeholder="Search..." />
-                  <label>Search...</label>
+              <form method="get" class="row g-3">
+                <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <input name="search" value="{{ request.GET.search }}" class="form-control" placeholder="Search..." />
+                    <label>Search...</label>
+                  </div>
                 </div>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <div class="form-floating">
-                  <select class="form-select">
-                    <option selected="selected">All</option>
-                    <option value="1">VIP</option>
-                    <option value="2">Fresh Case</option>
-                    <option value="3">Revisit</option>
-                    <option value="4">Regular</option>
-                    <option value="5">No Show</option>
-                  </select>
-                  <label>Patient Tags</label>
+              
+                <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <select name="blood_group" class="form-select">
+                      <option value="" {% if not request.GET.blood_group %}selected{% endif %}>All</option>
+                      <option value="A" {% if request.GET.blood_group == "A" %}selected{% endif %}>A</option>
+                      <option value="A+" {% if request.GET.blood_group == "A+" %}selected{% endif %}>A+</option>
+                      <option value="B" {% if request.GET.blood_group == "B" %}selected{% endif %}>B</option>
+                      <option value="B+" {% if request.GET.blood_group == "B+" %}selected{% endif %}>B+</option>
+                      <option value="B-" {% if request.GET.blood_group == "B-" %}selected{% endif %}>B-</option>
+                      <option value="O" {% if request.GET.blood_group == "O" %}selected{% endif %}>O</option>
+                      <option value="O-" {% if request.GET.blood_group == "O-" %}selected{% endif %}>O-</option>
+                    </select>
+                    <label>Blood Group</label>
+                  </div>
                 </div>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <div class="form-floating">
-                  <select class="form-select">
-                    <option selected="selected">All</option>
-                    <option value="1">Dr. Ryan Sylia</option>
-                    <option value="2">Dr. Alice</option>
-                    <option value="3">Dr. Smriti Vandana</option>
-                  </select>
-                  <label>Doctor</label>
-                </div>
-              </div>
-              <div class="col-12 col-md-6 col-lg-3 mb-3">
-                <div class="form-floating">
-                  <select class="form-select">
-                    <option selected="selected">All</option>
-                    <option value="1">Created</option>
-                    <option value="2">Upcoming</option>
-                    <option value="3">Ongoing</option>
-                    <option value="3">Completed</option>
-                    <option value="3">Deleted</option>
-                  </select>
-                  <label>Appointment Status</label>
-                </div>
-              </div>
+                {% comment %} <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <select class="form-select">
+                      <option selected="selected">All</option>
+                      <option value="1">Dr. Ryan Sylia</option>
+                      <option value="2">Dr. Alice</option>
+                      <option value="3">Dr. Smriti Vandana</option>
+                    </select>
+                    <label>Doctor</label>
+                  </div>
+                </div> {% endcomment %}
+                {% comment %} <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <select class="form-select">
+                      <option selected="selected">All</option>
+                      <option value="1">Created</option>
+                      <option value="2">Upcoming</option>
+                      <option value="3">Ongoing</option>
+                      <option value="3">Completed</option>
+                      <option value="3">Deleted</option>
+                    </select>
+                    <label>Appointment Status</label>
+                  </div>
+                </div> {% endcomment %}
+              </form>
             </div>
           </div>
         </div>
@@ -171,23 +184,18 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                       <li>
-                        {% comment %} 
-                        <a
-                          class="dropdown-item"
-                          href="{% url 'edit_patient' patient.id %}"
-                          >Edit</a
-                        >
-                        {% endcomment %}
+                        <a class="dropdown-item" href="{% url 'edit_patient' patient.id %}"><i data-feather="edit" class="me-0 me-md-1 fs-5"></i> Edit</a>
                       </li>
-                      {% comment %}
+                      
                       <li>
                         <a
                           class="dropdown-item theme-red"
                           href="{% url 'delete_patient' patient.id %}"
-                          >Delete</a
+                          onclick="return confirm('Are you sure you want to delete this patient?');"
                         >
-                      </li>
-                      {% endcomment %}
+                        <i data-feather="trash-2" class="me-0 me-md-1 fs-5"></i> Delete
+                      </a>
+                      </li>                      
                     </ul>
                   </div>
                 </td>
@@ -211,7 +219,7 @@
               <i
                 class="bi bi-balloon-heart fs-4 avatar avatar-50 bg-success text-white rounded mb-2"
               ></i>
-              <p class="h4 mb-0">22</p>
+              <p class="h4 mb-0">{{ stable_count }}</p>
               <p class="small opacity-75">Stable Patient</p>
             </div>
           </div>
@@ -222,7 +230,7 @@
               <i
                 class="bi bi-activity fs-4 avatar avatar-50 bg-warning text-white rounded mb-2"
               ></i>
-              <p class="h4 mb-0">12</p>
+              <p class="h4 mb-0">{{ good_count }}</p>
               <p class="small opacity-75">Good Patient</p>
             </div>
           </div>
@@ -233,7 +241,7 @@
               <i
                 class="bi bi-heart-pulse fs-4 avatar avatar-50 bg-orange text-white rounded mb-2"
               ></i>
-              <p class="h4 mb-0">2</p>
+              <p class="h4 mb-0">{{ critical_count }}</p>
               <p class="small opacity-75">Critical Patient</p>
             </div>
           </div>
@@ -263,15 +271,15 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-auto">
-                  <p class="h4 mb-0">21</p>
+                  <p class="h4 mb-0">{{ age_25_plus }}</p>
                   <p class="opacity-75">25+ Years</p>
                 </div>
                 <div class="col-auto">
-                  <p class="h4 mb-0">8</p>
+                  <p class="h4 mb-0">{{ age_16_30 }}</p>
                   <p class="opacity-75">16-30 Years</p>
                 </div>
                 <div class="col-auto">
-                  <p class="h4 mb-0">5</p>
+                  <p class="h4 mb-0">{{ age_0_15 }}</p>
                   <p class="opacity-75">0-15 Years</p>
                 </div>
               </div>
@@ -283,3 +291,11 @@
   </main>
 </div>
 {% endblock %} {% include 'partials/footer.html' %}
+<script>
+  setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.display = 'none';  // Masque l'alerte après 5 secondes
+    });
+  }, 5000); // 5 secondes
+</script>

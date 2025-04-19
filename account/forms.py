@@ -56,3 +56,9 @@ class ProfileForm(forms.ModelForm):
             'address_line1', 'address_line2', 'landmark', 'street', 'country',
             'pincode', 'state', 'city', 'bio', 'phone', 'profile_image', 'cover_image'  
         ]
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(), required=False)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
