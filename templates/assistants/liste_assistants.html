@@ -1,0 +1,301 @@
+<title>MediSense - Assistants</title>
+{% include 'partials/header.html' %}
+<div class="adminuiux-wrap">
+  {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
+  <main class="adminuiux-content has-sidebar" onclick="contentClick()">
+    <div class="container-fluid mt-3">
+      <div class="bg-theme-1-subtle rounded px-3 py-3">
+        <div class="row gx-3 align-items-center">
+          <div class="col col-sm mb-2 mb-sm-0">
+            <p class="h5">Assistants</p>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'dashboard' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item active bi" aria-current="page">
+                  Assistants
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-auto py-1">
+            <a href="{% url 'add_assistant' %}" class="btn btn-theme"
+              ><i data-feather="plus" class="me-0 me-md-1"></i>
+              <span class="d-none d-md-inline-block">Assistant</span></a
+            >
+          </div>
+          <div class="col-auto py-1 ms-auto ms-sm-0">
+            <button
+              class="btn btn-link btn-square btn-icon"
+              data-bs-toggle="collapse"
+              data-bs-target="#filterschedule"
+              aria-expanded="false"
+              aria-controls="filterschedule"
+            >
+              <i data-feather="filter"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="container" id="main-content">
+      <div class="collapse" id="filterschedule">
+        <div class="card adminuiux-card mt-4">
+          <div class="card-body pb-0">
+            <div class="row">
+              <form method="get" class="row g-3">
+                <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <input name="search" value="{{ request.GET.search }}" class="form-control" placeholder="Search..." />
+                    <label>Search...</label>
+                  </div>
+                </div>
+              
+                <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <select name="blood_group" class="form-select">
+                      <option value="" {% if not request.GET.blood_group %}selected{% endif %}>All</option>
+                      <option value="A" {% if request.GET.blood_group == "A" %}selected{% endif %}>A</option>
+                      <option value="A+" {% if request.GET.blood_group == "A+" %}selected{% endif %}>A+</option>
+                      <option value="B" {% if request.GET.blood_group == "B" %}selected{% endif %}>B</option>
+                      <option value="B+" {% if request.GET.blood_group == "B+" %}selected{% endif %}>B+</option>
+                      <option value="B-" {% if request.GET.blood_group == "B-" %}selected{% endif %}>B-</option>
+                      <option value="O" {% if request.GET.blood_group == "O" %}selected{% endif %}>O</option>
+                      <option value="O-" {% if request.GET.blood_group == "O-" %}selected{% endif %}>O-</option>
+                    </select>
+                    <label>Blood Group</label>
+                  </div>
+                </div>
+                {% comment %} <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <select class="form-select">
+                      <option selected="selected">All</option>
+                      <option value="1">Dr. Ryan Sylia</option>
+                      <option value="2">Dr. Alice</option>
+                      <option value="3">Dr. Smriti Vandana</option>
+                    </select>
+                    <label>Doctor</label>
+                  </div>
+                </div> {% endcomment %}
+                {% comment %} <div class="col-12 col-md-6 col-lg-3 mb-3">
+                  <div class="form-floating">
+                    <select class="form-select">
+                      <option selected="selected">All</option>
+                      <option value="1">Created</option>
+                      <option value="2">Upcoming</option>
+                      <option value="3">Ongoing</option>
+                      <option value="3">Completed</option>
+                      <option value="3">Deleted</option>
+                    </select>
+                    <label>Appointment Status</label>
+                  </div>
+                </div> {% endcomment %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card adminuiux-card mt-4 mb-4">
+        <div class="card-body">
+          <table id="dataTable" class="table w-100 nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th data-breakpoints="xs sm">Assistant</th>
+                <th data-breakpoints="xs sm md">Contact info</th>
+                <th data-breakpoints="xs sm">Blood Group</th>
+                {% comment %} <th class="all">Recent Schedule</th> {% endcomment %}
+                <th data-breakpoints="xs sm">Weight</th>
+                <th class="all">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for assistant in assistants %}
+              <tr>
+                <td class="text-center">{{ assistant.id }}</td>
+                <td>
+                  <div class="row align-items-center flex-nowrap">
+                    <div class="col-auto">
+                      <figure
+                        class="avatar avatar-40 mb-0 coverimg rounded-circle"
+                      >
+                      <img src="{% if assistant.profile.profile_image %}{{ assistant.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
+                    </figure>
+                    </div>
+                    <div class="col ps-0">
+                      <p class="mb-0 fw-medium">
+                        {% if assistant.profile.first_name or assistant.profile.last_name %}
+                        {{assistant.profile.first_name }}
+                        {{assistant.profile.last_name }} {% else %}
+                        {{assistant.username }} {% endif %}
+                      </p>
+                      <p class="text-secondary small">
+                        {{ assistant.profile.birth_date }}, {{assistant.profile.city}}, {{assistant.profile.country }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <p class="mb-0">{{ assistant.email }}</p>
+                  <p class="text-secondary small">
+                    {{ assistant.profile.phone }}
+                </p>
+                </td>
+                <td class="text-center">
+                  <span class="badge badge-light rounded-pill text-bg-success">
+                    {{ assistant.profile.blood_group|default:"Nothing" }}
+                  </span>
+                </td>
+                {% comment %} <td>
+                  <p class="mb-0">
+                    {{ assistant.profile.last_appointment|date:"g:i A - j F Y" }}
+                  </p>
+                  <p class="text-secondary small">
+                    {{ assistant.profile.reason }} - {{ assistant.profile.doctor }}
+                  </p>
+                </td> {% endcomment %}
+                <td class="text-center"> 
+                  <span class="badge badge-light rounded-pill text-bg-danger">
+                    {{ assistant.profile.weight|default:"0" }}
+                  </span>
+                </td>
+                <td>
+                  {% comment %}
+                  <a
+                    href="{% url 'view_assistant' assistant.id %}"
+                    class="btn btn-square btn-link"
+                    data-bs-toggle="tooltip"
+                    title="View"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </a>
+                  {% endcomment %}
+                  <div class="dropdown d-inline-block">
+                    <a class="btn btn-link no-caret" data-bs-toggle="dropdown">
+                      <i class="bi bi-three-dots"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <a class="dropdown-item" href="{% url 'edit_assistant' assistant.id %}"><i data-feather="edit" class="me-0 me-md-1 fs-5"></i> Edit</a>
+                      </li>
+                      
+                      <li>
+                        <a
+                          class="dropdown-item theme-red"
+                          href="{% url 'delete_assistant' assistant.id %}"
+                          onclick="return confirm('Are you sure you want to delete this assistant?');"
+                        >
+                        <i data-feather="trash-2" class="me-0 me-md-1 fs-5"></i> Delete
+                      </a>
+                      </li>                      
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% comment %} <div class="row pt-4 mb-4">
+        <div class="col-12 text-center mb-4 mb-lg-5">
+          <h1>Track assistant's statistic report easily</h1>
+          <p class="mb-0">
+            Take good care for your assistant with data oriented approach to
+            streamline medical facility
+          </p>
+        </div>
+        <div class="col mb-4">
+          <div class="card adminuiux-card bg-success-subtle">
+            <div class="card-body">
+              <i
+                class="bi bi-balloon-heart fs-4 avatar avatar-50 bg-success text-white rounded mb-2"
+              ></i>
+              <p class="h4 mb-0">{{ stable_count }}</p>
+              <p class="small opacity-75">Stable assistant</p>
+            </div>
+          </div>
+        </div>
+        <div class="col mb-4">
+          <div class="card adminuiux-card bg-warning-subtle">
+            <div class="card-body">
+              <i
+                class="bi bi-activity fs-4 avatar avatar-50 bg-warning text-white rounded mb-2"
+              ></i>
+              <p class="h4 mb-0">{{ good_count }}</p>
+              <p class="small opacity-75">Good assistant</p>
+            </div>
+          </div>
+        </div>
+        <div class="col mb-4">
+          <div class="card adminuiux-card bg-orange-subtle">
+            <div class="card-body">
+              <i
+                class="bi bi-heart-pulse fs-4 avatar avatar-50 bg-orange text-white rounded mb-2"
+              ></i>
+              <p class="h4 mb-0">{{ critical_count }}</p>
+              <p class="small opacity-75">Critical assistant</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6 mb-4">
+          <div class="card adminuiux-card bg-theme-1-space">
+            <div class="card-header">
+              <p class="h5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="feather feather-user me-2"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                assistant Age Range
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-auto">
+                  <p class="h4 mb-0">{{ age_25_plus }}</p>
+                  <p class="opacity-75">25+ Years</p>
+                </div>
+                <div class="col-auto">
+                  <p class="h4 mb-0">{{ age_16_30 }}</p>
+                  <p class="opacity-75">16-30 Years</p>
+                </div>
+                <div class="col-auto">
+                  <p class="h4 mb-0">{{ age_0_15 }}</p>
+                  <p class="opacity-75">0-15 Years</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> {% endcomment %}
+    </div>
+  </main>
+</div>
+{% endblock %} {% include 'partials/footer.html' %}
+<script>
+  setTimeout(function () {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.display = 'none';  // Masque l'alerte après 5 secondes
+    });
+  }, 5000); // 5 secondes
+</script>

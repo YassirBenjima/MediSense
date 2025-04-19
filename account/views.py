@@ -56,7 +56,6 @@ def myprofile(request):
 
     return render(request, 'myprofile.html', {'profile': profile,'age' : age})
 
-
 @login_required
 def profile_settings(request):
     user_email = request.user.email
@@ -213,8 +212,6 @@ def edit_patient(request, patient_id):
         'profile_form': profile_form,
         'patient': patient
     })
-
-
     
 @login_required
 def delete_patient(request, pk):
@@ -222,3 +219,88 @@ def delete_patient(request, pk):
     patient.delete()
     messages.success(request, "Patient deleted successfully.")
     return redirect('liste_patients')
+
+@login_required
+def liste_assistants(request):
+    user_email = request.user.email
+    search_query = request.GET.get('search', '')
+    blood_group = request.GET.get('blood_group', '')
+    assistants = User.objects.filter(is_assistant=True).select_related('profile')
+    if search_query:
+        assistants = assistants.filter(
+            Q(username__icontains=search_query) |
+            Q(profile__first_name__icontains=search_query) |
+            Q(profile__last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(profile__city__icontains=search_query) |
+            Q(profile__country__icontains=search_query)
+        )
+    if blood_group:
+        assistants = assistants.filter(profile__blood_group=blood_group)
+    context = {
+        'assistants': assistants,
+        'user_email': user_email,
+    }
+
+    return render(request, 'assistants/liste_assistants.html', context)
+
+@login_required
+def add_assistant(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = ProfileForm(request.POST, request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user.password)
+            user.is_assistant = True
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            
+            messages.success(request, "Assistant added successfully.")
+            return redirect('liste_assistants')
+    else:
+        user_form = UserForm()
+        profile_form = ProfileForm()
+
+    return render(request, 'assistants/add_assistant.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+
+@login_required
+def edit_assistant(request,assistant_id) : 
+    assistant = get_object_or_404(User, id=assistant_id)
+    profile = assistant.profile
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=assistant)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            password = request.POST.get('password')
+            if password:
+                user_form.instance.set_password(password)
+
+            user_form.save() 
+            profile_form.save() 
+
+            messages.success(request, "Assistant updated successfully.")
+            return redirect('liste_assistants')
+    else:
+        user_form = UserForm(instance=assistant)
+        profile_form = ProfileForm(instance=profile)
+
+    return render(request, 'assistants/edit_assistant.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'assistant': assistant
+    })
+
+@login_required
+def delete_assistant(request,pk) : 
+    assistant = get_object_or_404(User, pk=pk)
+    assistant.delete()
+    messages.success(request, "Assistant deleted successfully.")
+    return redirect('liste_assistants')
