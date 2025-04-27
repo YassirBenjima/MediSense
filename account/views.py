@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm,LoginForm,ProfileForm,UserForm
 from django.contrib.auth import authenticate , login
 from django.contrib import messages
-from .models import Profile,delete_old_file,User
+from .models import Profile,delete_old_file,User,Schedule
+from .forms import SignUpForm,LoginForm,ProfileForm,UserForm,ScheduleForm
 from datetime import date
 from django.db.models import Q
 
@@ -34,7 +34,11 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('dashboard')
+
+                if not hasattr(user, 'profile'):
+                    return redirect('settings')  
+                
+                return redirect('dashboard') 
             else:
                 messages.error(request, "Invalid credentials")
         else:
@@ -42,9 +46,16 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 @login_required
-def dashboard(request) : 
-    profile = request.user.profile 
-    return render(request,'dashboard.html', {'profile': profile})
+def dashboard(request):
+    profile = request.user.profile
+    total_patients = User.objects.filter(is_patient=True).count()
+    total_assistants = User.objects.filter(is_assistant=True).count()
+
+    return render(request, 'dashboard.html', {
+        'profile': profile,
+        'total_patients': total_patients,
+        'total_assistants': total_assistants,
+    })
 
 @login_required
 def myprofile(request):
@@ -304,3 +315,170 @@ def delete_assistant(request,pk) :
     assistant.delete()
     messages.success(request, "Assistant deleted successfully.")
     return redirect('liste_assistants')
+
+@login_required
+def liste_doctors(request):
+    user_email = request.user.email
+    search_query = request.GET.get('search', '')
+    blood_group = request.GET.get('blood_group', '')
+    doctors = User.objects.filter(is_doctor=True).select_related('profile')
+    if search_query:
+        doctors = doctors.filter(
+            Q(username__icontains=search_query) |
+            Q(profile__first_name__icontains=search_query) |
+            Q(profile__last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(profile__city__icontains=search_query) |
+            Q(profile__country__icontains=search_query)
+        )
+    if blood_group:
+        doctors = doctors.filter(profile__blood_group=blood_group)
+    context = {
+        'doctors': doctors,
+        'user_email': user_email,
+    }
+
+    return render(request, 'doctors/liste_doctors.html', context)
+
+@login_required
+def add_doctor(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = ProfileForm(request.POST, request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user.password)
+            user.is_doctor = True
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            
+            messages.success(request, "Doctor added successfully.")
+            return redirect('liste_doctors')
+    else:
+        user_form = UserForm()
+        profile_form = ProfileForm()
+
+    return render(request, 'doctors/add_doctor.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+    
+@login_required
+def edit_doctor(request, doctor_id):
+    doctor = get_object_or_404(User, id=doctor_id)
+    profile = doctor.profile
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=doctor)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            password = request.POST.get('password')
+            if password:
+                user_form.instance.set_password(password)
+
+            user_form.save() 
+            profile_form.save() 
+
+            messages.success(request, "Doctor updated successfully.")
+            return redirect('liste_doctors')
+    else:
+        user_form = UserForm(instance=doctor)
+        profile_form = ProfileForm(instance=profile)
+
+    return render(request, 'doctors/edit_doctor.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'doctor': doctor
+    })
+    
+@login_required
+def delete_doctor(request, pk):
+    doctor = get_object_or_404(User, pk=pk)
+    doctor.delete()
+    messages.success(request, "Doctor deleted successfully.")
+    return redirect('liste_doctors')
+
+@login_required
+def schedule_list(request):
+    search_query = request.GET.get('search', '')
+    doctor = request.GET.get('doctor', '')
+    status = request.GET.get('status', '')
+
+    schedules = Schedule.objects.all()
+
+    if search_query:
+        schedules = schedules.filter(
+            Q(patient__user__first_name__icontains=search_query) |
+            Q(patient__user__last_name__icontains=search_query)
+        )
+
+    if doctor:
+        schedules = schedules.filter(doctor__id=doctor)
+
+    if status:
+        schedules = schedules.filter(status=status)
+
+    doctors = User.objects.filter(is_doctor=True)
+    
+    return render(request, 'schedule/schedule_list.html', {
+        'schedules': schedules,
+        'doctors': doctors,
+        'search_query': search_query,
+        'selected_doctor': doctor,
+        'selected_status': status,
+        'Schedule': Schedule,
+    })
+
+@login_required
+def schedule_create(request):
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Appointment created successfully.")
+            return redirect('schedule_list')
+    else:
+        form = ScheduleForm()
+    
+    doctors = User.objects.filter(is_doctor=True)
+    patients = User.objects.filter(is_patient=True)
+
+    return render(request, 'schedule/schedule_create.html', {
+        'form': form,
+        'title': 'Créer un rendez-vous',
+        'doctors': doctors,
+        'patients': patients
+    })
+
+@login_required
+def schedule_update(request, pk):
+    schedule = get_object_or_404(Schedule, pk=pk)
+    
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST, instance=schedule)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Appointment updated successfully.")
+            return redirect('schedule_list')
+    else:
+        form = ScheduleForm(instance=schedule)
+
+    doctors = User.objects.filter(is_doctor=True)
+    patients = User.objects.filter(is_patient=True)
+
+    return render(request, 'schedule/schedule_edit.html', {
+        'form': form,
+        'title': 'Modifier le rendez-vous',
+        'doctors': doctors,
+        'patients': patients
+    })
+
+@login_required
+def delete_schedule(request, pk):
+    schedule = get_object_or_404(Schedule, pk=pk)
+    schedule.delete()
+    messages.success(request, "Appointment deleted successfully.")
+    return redirect('schedule_list')

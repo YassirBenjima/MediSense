@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User,Profile
+from .models import User,Profile,Schedule
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -62,3 +62,22 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+class ScheduleForm(forms.ModelForm):
+    class Meta:
+        model = Schedule
+        fields = [
+            'doctor',
+            'patient',
+            'disease',
+            'contact_info',
+            'date',
+            'time',
+            'duration_minutes',
+            'status',
+            'symptoms_description',
+        ]
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'time': forms.TimeInput(attrs={'type': 'time'}),
+        }

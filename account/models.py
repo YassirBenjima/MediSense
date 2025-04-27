@@ -48,3 +48,35 @@ def delete_old_file(file_field):
     if file_field and os.path.isfile(file_field.path):
         os.remove(file_field.path)
 
+class Schedule(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    STATUS_PENDING = 'pending'
+    STATUS_CONFIRMED = 'confirmed'
+    STATUS_COMPLETED = 'completed'
+    STATUS_CANCELLED = 'cancelled'
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments_as_doctor',
+                               limit_choices_to={'is_doctor': True})
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments_as_patient',
+                                limit_choices_to={'is_patient': True})
+    disease = models.CharField(max_length=255)
+    contact_info = models.CharField(max_length=100)
+    date = models.DateField()
+    time = models.TimeField()
+    duration_minutes = models.PositiveIntegerField(default=30)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    symptoms_description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Appointment: {self.patient.username} with Dr. {self.doctor.username} on {self.date} at {self.time}"
+    
+    def end_time(self):
+        """Returns the calculated end time based on duration."""
+        from datetime import datetime, timedelta
+        dt = datetime.combine(self.date, self.time)
+        return (dt + timedelta(minutes=self.duration_minutes)).time()

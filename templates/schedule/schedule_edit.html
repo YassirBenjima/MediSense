@@ -1,0 +1,192 @@
+<title>MediSense - Edit Schedule</title>
+{% include 'partials/header.html' %}
+<div class="adminuiux-wrap">
+  {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
+  <main class="adminuiux-content has-sidebar" onclick="contentClick()">
+    <div class="container-fluid mt-3">
+      <div class="bg-theme-1-subtle rounded px-3 py-3">
+        <div class="row gx-3 align-items-center">
+          <div class="col col-sm mb-2 mb-sm-0">
+            <p class="h5">Edit Schedule</p>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'dashboard' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'schedule_list' %}">Schedules</a>
+                </li>
+                <li class="breadcrumb-item active bi" aria-current="page">
+                    Edit Schedule
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-auto py-1"></div>
+        </div>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="container mt-4" id="main-content">
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-12 col-xxl-8">
+            <div class="card adminuiux-card mb-4">
+              <div class="card-body">
+                <p class="h6 mb-3">Schedule Details</p>
+                <div class="row mb-2">
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" name="doctor" id="id_doctor" required>
+                          <option value="" disabled {% if not form.doctor.value %}selected{% endif %}>-- Select a Doctor --</option>
+                          {% for user in doctors %}
+                            <option value="{{ user.id }}" {% if form.doctor.value == user.id|stringformat:"s" %}selected{% endif %}>
+                              Dr. {{ user.profile.first_name }} {{ user.profile.last_name }} | {{ user.profile.bio|striptags }}
+                            </option>
+                          {% endfor %}
+                        </select>                      
+                        <label for="id_doctor">Doctor</label>
+                      </div>                      
+                  </div>                  
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" name="patient" id="id_patient" required>
+                        <option value="" disabled {% if not form.patient.value %}selected{% endif %}>-- Select a Patient --</option>
+                        {% for user in patients %}
+                          <option value="{{ user.id }}" {% if form.patient.value == user.id|stringformat:"s" %}selected{% endif %}>
+                            {{ user.profile.first_name }} {{ user.profile.last_name }}
+                          </option>
+                        {% endfor %}
+                      </select>                      
+                      <label for="id_patient">Patient</label>
+                    </div>
+                  </div>                  
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <select
+                        name="status"
+                        id="id_status"
+                        class="form-select"
+                        required
+                      >
+                      <option value="" disabled selected>-- Select a Status --</option>
+                        {% for key, label in form.fields.status.choices %}
+                          <option value="{{ key }}" {% if form.initial.status == key %}selected{% endif %}>
+                            {{ label }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                      <label for="id_status">Statut</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        name="contact_info"
+                        id="id_contact_info"
+                        class="form-control {% if form.contact_info.errors %}is-invalid{% endif %}"
+                        placeholder="Enter Contact Information"
+                        value="{{ form.contact_info.value|default:'' }}"
+                        required
+                      />
+                      <label for="id_contact_info">Contact Information</label>
+                    </div>
+                  </div> 
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        name="disease"
+                        id="id_disease"
+                        class="form-control {% if form.disease.errors %}is-invalid{% endif %}"
+                        placeholder="Enter Disease"
+                        value="{{ form.disease.value|default:'' }}"
+                        required
+                      />
+                      <label for="id_disease">Disease</label>
+                    </div>
+                  </div>                                   
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="date"
+                        name="date"
+                        id="id_date"
+                        class="form-control"
+                        placeholder="Date"
+                        value="{{ form.initial.date|date:'Y-m-d' }}"
+                        required
+                      />
+                      <label for="id_date">Date</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="time"
+                        name="time"
+                        id="id_time"
+                        class="form-control"
+                        placeholder="Heure"
+                        value="{{ form.initial.time|time:'H:i' }}"
+                        required
+                      />
+                      <label for="id_time">Heure</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="number"
+                        name="duration_minutes"
+                        id="id_duration_minutes"
+                        class="form-control"
+                        placeholder="Durée en minutes"
+                        value="{{ form.initial.duration_minutes }}"
+                        min="1"
+                        required
+                      />
+                      <label for="id_duration_minutes">Durée (minutes)</label>
+                    </div>
+                  </div>
+                  <p class="title h6 mb-3">Description des symptômes</p>
+                  <div class="mb-4">
+                      <textarea
+                        name="symptoms_description"
+                        id="id_symptoms_description"
+                        class="FroalaEditor"
+                        placeholder="Décrivez vos symptômes"
+                        style="height: 100px;"
+                      >{{ form.initial.symptoms_description }}</textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="mb-4">
+          <div class="row">
+            <div class="col">
+              <button type="submit" class="btn btn-theme">
+                <i data-feather="plus" class="me-0 me-md-1"></i>Submit
+              </button>
+            </div>
+            <div class="col-auto">
+              <button
+                class="btn btn-warning my-2"
+                type="button" 
+                onclick="window.location.href='{% url 'liste_assistants' %}'"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+  {% endblock %} {% include 'partials/footer.html' %}

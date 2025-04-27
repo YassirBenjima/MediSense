@@ -1,0 +1,353 @@
+<title>MediSense - Add Doctor</title>
+{% include 'partials/header.html' %}
+<div class="adminuiux-wrap">
+  {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
+  <main class="adminuiux-content has-sidebar" onclick="contentClick()">
+    <div class="container-fluid mt-3">
+      <div class="bg-theme-1-subtle rounded px-3 py-3">
+        <div class="row gx-3 align-items-center">
+          <div class="col col-sm mb-2 mb-sm-0">
+            <p class="h5">Add Doctor</p>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'dashboard' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'liste_doctors' %}">Doctors</a>
+                </li>
+                <li class="breadcrumb-item active bi" aria-current="page">
+                  Add Doctor
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-auto py-1"></div>
+        </div>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="container mt-4" id="main-content">
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-12 col-xxl-8">
+            <div class="card adminuiux-card mb-4">
+              <div class="card-body">
+                <p class="h6 mb-3">Doctor Details</p>
+                <div class="row mb-2">
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        name="first_name"
+                        id="id_first_name"
+                        class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                        placeholder="Enter Doctor First Name"
+                        value="{{ form.first_name.value|default:'' }}"
+                        required
+                      />
+                      <label for="id_first_name">Doctor First Name</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        name="last_name"
+                        id="id_last_name"
+                        class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                        placeholder="Enter Doctor Last Name"
+                        value="{{ form.last_name.value|default:'' }}"
+                        required="true"
+                      />
+                      <label for="id_last_name">Doctor Last Name</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="date"
+                        name="birth_date"
+                        id="id_birth_date"
+                        class="form-control datepicker"
+                        placeholder="Birth Date"
+                        value="{{ form.initial.birth_date|date:'Y-m-d' }}"
+                        required="true"
+                      />
+                      <label for="id_birth_date">Birth Date</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        name="phone"
+                        id="id_phone"
+                        class="form-control"
+                        placeholder="Phone"
+                        value="{{ form.phone.value|default:'' }}"
+                        required="true"
+                      />
+                      <label for="id_phone">Phone</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="email"
+                        name="email"
+                        id="id_email"
+                        class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                        placeholder="Enter Email Address"
+                        value="{{ form.email.value|default:'' }}"
+                        required="true"
+                      />
+                      <label for="id_email">Email Address</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="text"
+                        name="username"
+                        id="id_username"
+                        class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                        placeholder="Enter Username"
+                        value="{{ form.username.value|default:'' }}"
+                        required="true"
+                      />
+                      <label for="id_username">Username</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 col-xl-4">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="password"
+                        name="password"
+                        id="id_password"
+                        class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                        placeholder="Enter Password"
+                        required="true"
+                      />
+                      <label for="id_password">Password</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-floating mb-3">
+                        <select class="form-select" name="blood_group" id="id_blood_group" required="true">
+                            <option value="A" {% if form.blood_group.value == 'A' %}selected{% endif %}>A</option>
+                            <option value="A+" {% if form.blood_group.value == 'A+' %}selected{% endif %}>A+</option>
+                            <option value="B" {% if form.blood_group.value == 'B' %}selected{% endif %}>B</option>
+                            <option value="B+" {% if form.blood_group.value == 'B+' %}selected{% endif %}>B+</option>
+                            <option value="B-" {% if form.blood_group.value == 'B-' %}selected{% endif %}>B-</option>
+                            <option value="O" {% if form.blood_group.value == 'O' %}selected{% endif %}>O</option>
+                            <option value="O-" {% if form.blood_group.value == 'O-' %}selected{% endif %}>O-</option>
+                        </select>
+                        <label for="id_blood_group">Blood Group</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-floating mb-3">
+                        <input 
+                            type="number" 
+                            name="weight" 
+                            id="id_weight" 
+                            class="form-control" 
+                            placeholder="Weight" 
+                            value="{{ form.weight.value|default:'' }}" 
+                            required="true"
+                            min="0" 
+                            step="0.1"
+                        />
+                        <label for="id_weight">Weight (kg)</label>
+                    </div>
+                  </div>
+                </div>
+                <p class="title h6 mb-3">Address Details</p>
+                <div class="row mb-2">
+                  <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input 
+                                type="text" 
+                                name="address_line1" 
+                                id="id_address_line1" 
+                                class="form-control" 
+                                placeholder="Address Line 1" 
+                                value="{{ form.address_line1.value|default:'' }}" 
+                                required="true"
+                            />
+                            <label for="id_address_line1">Address Line 1</label>
+                        </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-floating mb-3">
+                            <input 
+                                type="text" 
+                                name="address_line2" 
+                                id="id_address_line2" 
+                                class="form-control" 
+                                placeholder="Address Line 2" 
+                                value="{{ form.address_line2.value|default:'' }}" 
+                                required="true"
+                            />
+                            <label for="id_address_line2">Address Line 2</label>
+                        </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                      <div class="form-floating mb-3">
+                          <input 
+                              type="text" 
+                              name="landmark" 
+                              id="id_landmark" 
+                              class="form-control" 
+                              placeholder="Landmark" 
+                              value="{{ form.landmark.value|default:'' }}" 
+                              required="true"
+                          />
+                          <label for="id_landmark">Landmark</label>
+                      </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                      <div class="form-floating mb-3">
+                          <input 
+                              type="text" 
+                              name="street" 
+                              id="id_street" 
+                              class="form-control" 
+                              placeholder="Street" 
+                              value="{{ form.street.value|default:'' }}" 
+                              required="true"
+                          />
+                          <label for="id_street">Street</label>
+                      </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                      <div class="form-floating mb-3">
+                          <input 
+                              type="text" 
+                              name="country" 
+                              id="id_country" 
+                              class="form-control" 
+                              placeholder="Country" 
+                              value="{{ form.country.value|default:'' }}" 
+                              required="true"
+                          />
+                          <label for="id_country">Country</label>
+                      </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-floating mb-3">
+                        <input 
+                            type="text" 
+                            name="pincode" 
+                            id="id_pincode" 
+                            class="form-control" 
+                            placeholder="Pincode" 
+                            value="{{ form.pincode.value|default:'' }}" 
+                            required="true"
+                        />
+                        <label for="id_pincode">Pincode</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-floating mb-3">
+                        <input 
+                            type="text" 
+                            name="state" 
+                            id="id_state" 
+                            class="form-control" 
+                            placeholder="State" 
+                            value="{{ form.state.value|default:'' }}" 
+                            required="true"
+                        />
+                        <label for="id_state">State</label>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-floating mb-3">
+                        <input 
+                            type="text" 
+                            name="city" 
+                            id="id_city" 
+                            class="form-control {% if form.city.errors %}is-invalid{% endif %}" 
+                            placeholder="City" 
+                            value="{{ form.city.value|default:'' }}" 
+                            required="true"
+                        />
+                        <label for="id_city">City</label>
+                    </div>
+                  </div>   
+                </div>
+                <p class="title h6 mb-3">Professional bio</p>
+                <div class="mb-4">
+                    <textarea class="FroalaEditor" name="bio" id="id_bio">{{ form.bio.value|default:'' }}</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-12 col-lg-12 col-xxl-4">
+            <p class="h6 mb-3">Doctor Photo</p>
+            <div class="mb-4">
+              <figure class="avatar avatar-80 rounded coverimg m-auto">
+                <img 
+                  id="profileImage" 
+                  src="{% if form.profile_image.value %}{{ form.profile_image.value.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" 
+                  alt="Profile Image" 
+                  class="mw-100"
+                />
+                <button
+                  type="button"
+                  class="btn btn-square btn-accent"
+                  onclick="document.getElementById('profileInput').click();"
+                >
+                  <i class="bi bi-upload"></i>
+                </button>
+                <input type="file" id="profileInput" class="d-none" name="profile_image"/>
+              </figure>
+            </div>
+            <p class="h6 mb-3">Cover Photo</p>
+            <div class="mb-4">
+              <figure class="coverimg w-100 height-250 mb-0 position-relative rounded">
+                <img 
+                  id="coverImage" 
+                  src="{% if form.cover_image.value %}{{ form.cover_image.value.url }}{% else %}{% static 'assets/img/modern-ai-image/modern-bg-4.jpg' %}{% endif %}" 
+                  alt="Cover Image" 
+                  class="mw-100"
+                />
+                <button
+                  type="button"
+                  class="btn btn-square btn-accent position-absolute top-0 end-0 m-2"
+                  onclick="document.getElementById('coverInput').click();"
+                >
+                  <i class="bi bi-upload"></i>
+                </button>
+                <input type="file" id="coverInput" class="d-none" name="cover_image"/>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="mb-4">
+          <div class="row">
+            <div class="col">
+              <button type="submit" class="btn btn-theme">
+                <i data-feather="plus" class="me-0 me-md-1"></i>Submit
+              </button>
+            </div>
+            <div class="col-auto">
+              <button
+                class="btn btn-warning my-2"
+                type="button" 
+                onclick="window.location.href='{% url 'liste_doctors' %}'"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock %} {% include 'partials/footer.html' %}

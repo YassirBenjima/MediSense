@@ -1,0 +1,409 @@
+<title>MediSense - Schedule Liste</title>
+{% include 'partials/header.html' %}
+<div class="adminuiux-wrap">
+  {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
+  <main class="adminuiux-content has-sidebar" onclick="contentClick()">
+    <div class="container-fluid mt-3">
+      <div class="bg-theme-1-subtle rounded px-3 py-3">
+        <div class="row gx-3 align-items-center">
+          <div class="col-12 col-sm mb-2 mb-sm-0">
+            <p class="h5">Schedule List</p>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'dashboard' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item active bi" aria-current="page">
+                  Schedule List
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-auto py-1">
+            <a href="{% url 'schedule_create' %}" class="btn btn-theme"
+              ><i data-feather="plus" class="me-0 me-md-1"></i>
+              <span class="d-none d-md-inline-block">Appointment</span></a
+            >
+          </div>
+          <div class="col-auto py-1 ms-auto ms-sm-0">
+            <button
+              class="btn btn-link btn-square btn-icon"
+              data-bs-toggle="collapse"
+              data-bs-target="#filterschedule"
+              aria-expanded="false"
+              aria-controls="filterschedule"
+            >
+              <i data-feather="filter"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container" id="main-content">
+      <div class="collapse" id="filterschedule">
+        <div class="card adminuiux-card mt-4">
+          <div class="card-body pb-0">
+            <div class="row">
+              <form method="get" class="row g-3 mb-4">
+                <!-- Search -->
+                <div class="col-12 col-md-6 col-lg-3">
+                  <div class="form-floating">
+                    <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ search_query }}">
+                    <label>Search by Patient</label>
+                  </div>
+                </div>
+              
+                <!-- Doctor -->
+                <div class="col-12 col-md-6 col-lg-3">
+                  <div class="form-floating">
+                    <select name="doctor" class="form-select">
+                      <option value="">All</option>
+                      {% for user in doctors %}
+                        <option value="{{ user.id }}" {% if selected_doctor == user.id|stringformat:"s" %}selected{% endif %}>
+                          Dr. {{ user.profile.first_name }} {{ user.profile.last_name }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                    <label>Doctor</label>
+                  </div>
+                </div>                
+              
+                <!-- Status -->
+                <div class="col-12 col-md-6 col-lg-3">
+                  <div class="form-floating">
+                    <select name="status" class="form-select">
+                      <option value="">All</option>
+                      {% for val, label in Schedule.STATUS_CHOICES %}
+                        <option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                    <label>Appointment Status</label>
+                  </div>
+                </div>
+              </form>              
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card adminuiux-card mt-4 mb-4">
+        <div class="card-body">
+          <table id="dataTable" class="table w-100 nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th data-breakpoints="xs sm">Schedule</th>
+                <th data-breakpoints="xs sm md">Patient</th>
+                <th data-breakpoints="xs sm md">Doctor</th>
+                <th data-breakpoints="xs sm md">Disease</th>
+                <th class="all">Contact Info</th>
+                <th data-breakpoints="xs sm">Status</th>
+                <th class="all">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for schedule in schedules %}
+              <tr>
+                <td class="text-center">{{ schedule.id }}</td>
+                <td>
+                  <p class="mb-0">{{ schedule.time|time:"g:i A" }}</p>
+                  <p class="text-secondary small">
+                      {{ schedule.date|date:"j F Y" }}
+                  </p>
+                </td>
+                <td>
+                  <div class="row align-items-center flex-nowrap">
+                    <div class="col-auto">
+                      <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
+                        <img src="{% if schedule.patient.profile.profile_image %}{{ schedule.patient.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
+                      </figure>
+                    </div>
+                    <div class="col ps-0">
+                      <p class="mb-0 fw-medium">
+                        {% if schedule.patient.profile.first_name or schedule.patient.profile.last_name %}
+                          {{ schedule.patient.profile.first_name }} {{ schedule.patient.profile.last_name }}
+                        {% else %}
+                          {{ schedule.patient.username }}
+                        {% endif %}
+                      </p>
+                      <p class="text-secondary small">
+                        {{ schedule.patient.profile.city }}, {{ schedule.patient.profile.country }}
+                      </p>
+                    </div>
+                  </div>
+                </td> 
+                <td>
+                  <div class="row align-items-center flex-nowrap">
+                    <div class="col-auto">
+                      <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
+                        <img src="{% if schedule.doctor.profile.profile_image %}{{ schedule.doctor.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
+                      </figure>
+                    </div>
+                    <div class="col ps-0">
+                      <p class="mb-0 fw-medium">
+                        {% if schedule.doctor.profile.first_name or schedule.doctor.profile.last_name %}
+                          {{ schedule.doctor.profile.first_name }} {{ schedule.doctor.profile.last_name }}
+                        {% else %}
+                          {{ schedule.doctor.username }}
+                        {% endif %}
+                      </p>
+                      <p class="text-secondary small">
+                        {{ schedule.doctor.profile.city }}, {{ schedule.doctor.profile.country }}
+                      </p>
+                    </div>
+                  </div>
+                </td>                    
+                <td>
+                  <p class="mb-0">{{ schedule.disease }}</p>
+                  <p class="text-secondary small">
+                    {{ schedule.symptoms_description|striptags }}
+                  </p>
+                </td>
+                <td class="text-center">
+                  <p class="badge badge-light rounded-pill text-bg-primary">
+                    {{ schedule.contact_info}}
+                  </p>
+                </td>
+                {% comment %} <td>
+                  <p class="mb-0">
+                    {{ doctor.profile.last_appointment|date:"g:i A - j F Y" }}
+                  </p>
+                  <p class="text-secondary small">
+                    {{ doctor.profile.reason }} - {{ doctor.profile.doctor }}
+                  </p>
+                </td> {% endcomment %}
+                <td class="text-center"> 
+                  <span class="badge badge-light rounded-pill 
+                    {% if schedule.status == 'pending' %} text-bg-warning 
+                    {% elif schedule.status == 'confirmed' %} text-bg-info 
+                    {% elif schedule.status == 'completed' %} text-bg-success 
+                    {% elif schedule.status == 'cancelled' %} text-bg-danger 
+                    {% else %} text-bg-secondary 
+                    {% endif %}">
+                    {{ schedule.status }}
+                  </span>
+                </td>
+                
+
+                {% comment %} <td class="text-center">
+                  <span class="badge badge-light rounded-pill 
+                    {% if schedule.status == 'pending' %}text-bg-warning{% elif schedule.status == 'confirmed' %}text-bg-info{% elif schedule.status == 'completed' %}text-bg-success{% elif schedule.status == 'cancelled' %}text-bg-danger{% endif %}">
+                    {{ schedule.status }}
+                  </span>
+                </td> {% endcomment %}
+                
+                <td>
+                  {% comment %}
+                  <a
+                    href="{% url 'view_doctor' doctor.id %}"
+                    class="btn btn-square btn-link"
+                    data-bs-toggle="tooltip"
+                    title="View"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </a>
+                  {% endcomment %}
+                  <div class="dropdown d-inline-block">
+                    <a class="btn btn-link no-caret" data-bs-toggle="dropdown">
+                      <i class="bi bi-three-dots"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <a class="dropdown-item" href="{% url 'schedule_update' schedule.id %}"><i data-feather="edit" class="me-0 me-md-1 fs-5"></i> Edit</a>
+                      </li>
+                      
+                      <li>
+                        <a
+                          class="dropdown-item theme-red"
+                          href="{% url 'schedule_delete' schedule.id %}"
+                          onclick="return confirm('Are you sure you want to delete this schedule ?');"
+                        >
+                          <i data-feather="trash-2" class="me-0 me-md-1 fs-5"></i> Delete
+                        </a>
+                      </li>                       
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+    {% comment %} <div
+      class="modal fade adminuiux-modal"
+      tabindex="-1"
+      id="viewappointmentmodal"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header d-block">
+            <div class="row align-items-center gx-3">
+              <div class="col-12 col-sm">
+                <p class="text-secondary small mb-0">Appointment Schedule</p>
+                <p class="modal-title h5">2:20 AM 9 June 2024</p>
+              </div>
+              <div class="col col-sm-auto">
+                <span class="badge badge-light rounded-pill text-bg-success"
+                  >Paid</span
+                >
+                <span class="badge badge-light rounded-pill text-bg-info"
+                  >In-Progress</span
+                >
+              </div>
+              <div class="col-auto">
+                <div class="dropdown d-inline-block">
+                  <a class="btn btn-link no-caret" data-bs-toggle="dropdown"
+                    ><i class="bi bi-three-dots-vertical"></i
+                  ></a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="javascript:void(0)"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="javascript:void(0)"
+                        >Move</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item theme-red"
+                        href="javascript:void(0)"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body">
+            <p class="text-secondary small mb-0">Disease Details</p>
+            <p>Stomach aches</p>
+            <p class="text-secondary small mb-0">Consultation</p>
+            <p>Offline Consultation</p>
+            <p class="text-secondary small mb-0">Health issue description</p>
+            <p>Feeling very heavy pain and couldn't able to eat properly.</p>
+            <p class="text-secondary small mb-0">Doctor</p>
+            <p>Dr. Ryan Sylia</p>
+            <div class="row align-items-center mb-3">
+              <div class="col"><hr class="bordered" /></div>
+              <div class="col-auto"><p class="h6">Patient Details</p></div>
+              <div class="col"><hr class="bordered" /></div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-sm-auto text-center mb-2 mb-md-0">
+                <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
+                  <img src="assets/img/modern-ai-image/user-5.jpg" alt="" />
+                </figure>
+              </div>
+              <div class="col-12 col-sm">
+                <div class="row align-items-center mb-2">
+                  <div class="col">
+                    <a href="clinic-view-patient.html" class="h6 style-none"
+                      >Alicia Smith</a
+                    >
+                    <p>
+                      <span
+                        class="badge badge-light rounded-pill text-bg-theme-accent-1"
+                        >Revisit</span
+                      >
+                      <span
+                        class="badge badge-light rounded-pill text-bg-theme-accent-1"
+                        >VIP</span
+                      >
+                    </p>
+                  </div>
+                  <div class="col-auto">
+                    <a
+                      href="clinic-view-patient.html"
+                      class="btn btn-square btn-link border"
+                      data-bs-toggle="tooltip"
+                      title="View"
+                      ><i data-feather="user"></i> </a
+                    ><button
+                      class="btn btn-square btn-outline-success mx-2"
+                      data-bs-toggle="tooltip"
+                      title="Call"
+                    >
+                      <i data-feather="phone"></i>
+                    </button>
+                    <button
+                      class="btn btn-square btn-outline-warning"
+                      data-bs-toggle="tooltip"
+                      title="Message"
+                    >
+                      <i data-feather="message-circle"></i>
+                    </button>
+                  </div>
+                </div>
+                <p class="text-secondary">
+                  12, Featherstone Street, Ward, London, NG25 5AY<br />United
+                  Kingdom
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col">
+              <button
+                class="btn btn-square btn-success"
+                data-bs-toggle="tooltip"
+                title="Paid"
+              >
+                <i class="bi bi-cash"></i> <span class="d-none">Paid</span>
+              </button>
+              <button
+                class="btn btn-square btn-accent mx-2"
+                data-bs-toggle="tooltip"
+                title="Mark as Completed"
+              >
+                <i class="bi bi-clipboard-check"></i>
+                <span class="d-none">Completed</span>
+              </button>
+              <button
+                class="btn btn-square btn-outline-warning"
+                data-bs-toggle="tooltip"
+                title="No Show"
+              >
+                <i class="bi bi-eye-slash"></i>
+                <span class="d-none">No Show</span>
+              </button>
+              <button
+                class="btn btn-square btn-link border mx-2"
+                data-bs-toggle="tooltip"
+                title="Cancel"
+              >
+                <i class="bi bi-x-circle"></i>
+                <span class="d-none">Cancel</span>
+              </button>
+            </div>
+            <div class="col-auto">
+              <button
+                type="button"
+                class="btn btn-link theme-red"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> {% endcomment %}
+  </main>
+  {% endblock %} {% include 'partials/footer.html' %}
+  <script>
+    setTimeout(function () {
+      const alerts = document.querySelectorAll(".alert");
+      alerts.forEach(function (alert) {
+        alert.style.display = "none"; // Masque l'alerte après 5 secondes
+      });
+    }, 5000); // 5 secondes
+  </script>
+</div>
