@@ -98,68 +98,23 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'dashboard' %}">Home</a>
               </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  data-bs-popper="static"
-                  href="#"
-                  role="button"
-                  aria-expanded="false"
-                  >Pages</a
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'liste_doctors' %}">Doctors</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'liste_assistants' %}"
+                  >Assistants</a
                 >
-                <div class="dropdown-menu width-200">
-                  <div>
-                    <a class="dropdown-item" href="clinic-profile.html"
-                      >Clinic Profile</a
-                    >
-                  </div>
-                  <div>
-                    <a class="dropdown-item" href="clinic-personalization.html"
-                      >Branding</a
-                    >
-                  </div>
-                  <div>
-                    <a class="dropdown-item" href="clinic-users.html">Users</a>
-                  </div>
-                  <div><hr class="dropdown-divider" /></div>
-                  <div>
-                    <a class="dropdown-item" href="clinic-help-center.html"
-                      ><i
-                        data-feather="help-circle"
-                        class="avatar avatar-18 me-1"
-                      ></i>
-                      Help Center</a
-                    >
-                  </div>
-                  <div>
-                    <a class="dropdown-item" href="{% url 'settings' %}"
-                      ><i
-                        data-feather="settings"
-                        class="avatar avatar-18 me-1"
-                      ></i>
-                      Onboarding</a
-                    >
-                  </div>
-                  <div>
-                    <a
-                      class="dropdown-item theme-green"
-                      href="clinic-pages.html"
-                      ><div class="row gx-0">
-                        <div class="col">
-                          <i
-                            data-feather="layers"
-                            class="avatar avatar-18 me-1"
-                          ></i>
-                          All Pages
-                        </div>
-                        <div class="col-auto">
-                          <span class="badge text-bg-danger">40+</span>
-                        </div>
-                      </div></a
-                    >
-                  </div>
-                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'liste_patients' %}"
+                  >Patients</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'schedule_list' %}"
+                  >Schedules</a
+                >
               </li>
               {% comment %}
               <li class="nav-item">

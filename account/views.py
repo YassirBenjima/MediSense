@@ -5,7 +5,9 @@ from django.contrib import messages
 from .models import Profile,delete_old_file,User,Schedule
 from .forms import SignUpForm,LoginForm,ProfileForm,UserForm,ScheduleForm
 from datetime import date
-from django.db.models import Q
+from django.db.models import Q,Sum
+from datetime import timedelta
+from django.utils import timezone
 
 # Create your views here.
 # def index(request):
@@ -49,14 +51,31 @@ def login_view(request):
 def dashboard(request):
     profile = request.user.profile
     total_patients = User.objects.filter(is_patient=True).count()
+    
+    # Nombre de patients créés dans les 30 derniers jours
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    new_patients = User.objects.filter(is_patient=True, date_joined__gte=thirty_days_ago).count()
+
     total_assistants = User.objects.filter(is_assistant=True).count()
+    total_doctors = User.objects.filter(is_doctor=True).count()
+    total_schedule = Schedule.objects.count()
+        
+    # Exemple : total minutes (en utilisant duration_minutes dans ton modèle Schedule)
+    total_minutes = Schedule.objects.aggregate(Sum('duration_minutes')).get('duration_minutes__sum') or 0
+
+    schedules = Schedule.objects.all()
 
     return render(request, 'dashboard.html', {
         'profile': profile,
         'total_patients': total_patients,
+        'new_patients': new_patients,  # Ajout du nombre de nouveaux patients
         'total_assistants': total_assistants,
+        'total_doctors': total_doctors,
+        'total_schedule': total_schedule,
+        'total_minutes': total_minutes,
+        'schedules' : schedules,
     })
-
+    
 @login_required
 def myprofile(request):
     try:
