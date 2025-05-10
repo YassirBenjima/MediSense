@@ -539,9 +539,58 @@ def delete_schedule(request, pk):
     messages.success(request, "Appointment deleted successfully.")
     return redirect('schedule_list')
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import User
+
 @login_required
 def doctors_profile(request):
-    doctors = User.objects.filter(is_doctor=True).select_related('profile')
+    search = request.GET.get('search', '')
+    city = request.GET.get('city', '')
+    country = request.GET.get('country', '')
+    bio = request.GET.get('bio', '')
+
+    doctors = User.objects.filter(is_doctor=True)
+
+    if search:
+        doctors = doctors.filter(name__icontains=search)
+    if city:
+        doctors = doctors.filter(profile__city__icontains=city)
+    if country:
+        doctors = doctors.filter(profile__country__icontains=country)
+    if bio:
+        doctors = doctors.filter(profile__bio__icontains=bio)
+
     return render(request, 'doctors/doctors_profile.html', {
-        'doctors': doctors
+        'doctors': doctors,
+        'search': search,
+        'city': city,
+        'country': country,
+        'bio': bio,
+    })
+
+@login_required
+def assistants_profile(request):
+    search = request.GET.get('search', '')
+    city = request.GET.get('city', '')
+    country = request.GET.get('country', '')
+    bio = request.GET.get('bio', '')
+
+    assistants = User.objects.filter(is_assistant=True)
+
+    if search:
+        assistants = assistants.filter(name__icontains=search)
+    if city:
+        assistants = assistants.filter(profile__city__icontains=city)
+    if country:
+        assistants = assistants.filter(profile__country__icontains=country)
+    if bio:
+        assistants = assistants.filter(profile__bio__icontains=bio)
+
+    return render(request, 'assistants/assistants_profile.html', {
+        'assistants': assistants,
+        'search': search,
+        'city': city,
+        'country': country,
+        'bio': bio,
     })

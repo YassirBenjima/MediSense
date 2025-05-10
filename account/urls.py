@@ -28,5 +28,6 @@ urlpatterns = [
     path('appointments/<int:pk>/delete/', views.delete_schedule, name='schedule_delete'),
     # Patient
     path('doctors_profile',views.doctors_profile,name='doctors_profile'),
-    
+    path('assistants_profile',views.assistants_profile,name='assistants_profile'),
+
 ]

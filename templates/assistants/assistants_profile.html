@@ -1,4 +1,4 @@
-<title>MediSense - Find Your Doctor</title>
+<title>MediSense - Find Your Assistant</title>
 {% include 'partials/header.html' %}
 <div class="adminuiux-wrap">
   {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
@@ -11,14 +11,14 @@
       <div class="bg-theme-1-subtle rounded px-3 py-3">
         <div class="row gx-3 align-items-center">
           <div class="col col-sm mb-2 mb-sm-0">
-            <p class="h5">Find Your Doctor</p>
+            <p class="h5">Find Your Assistant</p>
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item bi">
                   <a href="{% url 'dashboard' %}">Home</a>
                 </li>
                 <li class="breadcrumb-item active bi" aria-current="page">
-                  Profiles Doctor
+                  Profiles Assistant
                 </li>
                 </li>
               </ol>
@@ -86,35 +86,35 @@
       <br/>
   <div class="row mb-4">
     <div class="col-12 text-center mb-4 mb-lg-5">
-      <h1>Find your doctor</h1>
-      <p class="mb-0">Search and connect with qualified doctors easily</p>
+      <h1>Find your Assistant</h1>
+      <p class="mb-0">Search and connect with qualified assistants easily</p>
     </div>
-    {% for doctor in doctors %}
+    {% for assistant in assistants %}
     <div class="col-md-3 mb-4">
       <div class="card adminuiux-card h-100">
         <div class="card-header">
           <div class="row gx-3 mb-2">
             <div class="col">
-              <p class="h6 mb-1">{{ doctor.date_joined|time:"H:i A" }}</p>
-              <p class="mb-0 text-secondary">{{ doctor.date_joined|date:"j F Y" }}</p>
+              <p class="h6 mb-1">{{ assistant.date_joined|time:"H:i A" }}</p>
+              <p class="mb-0 text-secondary">{{ assistant.date_joined|date:"j F Y" }}</p>
             </div>
             <div class="col-auto text-end">
               <p class="mb-0 h6">N/A</p>
               <span class="badge bg-success p-1 m-1"><small>Active</small></span>
             </div>
           </div>
-          <p class="mb-0">{{ doctor.profile.bio|striptags|default:"Aucune description" }}</p>
-          <p class="opacity-75 small">Dr. {{ doctor.profile.first_name }} {{ doctor.profile.last_name }}</p>
+          <p class="mb-0">{{ assistant.profile.bio|striptags|default:"Aucune description" }}</p>
+          <p class="opacity-75 small">As. {{ assistant.profile.first_name }} {{ assistant.profile.last_name }}</p>
         </div>
         <div class="card-body text-center">
-          <p class="text-theme-theme-1 small mb-3">Détails du Docteur</p>
+          <p class="text-theme-theme-1 small mb-3">Détails du Assistant</p>
           <div class="avatar avatar-60 rounded-circle coverimg mb-3"
-               style="background-image: url('{% if doctor.profile.profile_image %}{{ doctor.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}');">
-            <img src="{% if doctor.profile.profile_image %}{{ doctor.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="photo" style="display: none" />
+               style="background-image: url('{% if assistant.profile.profile_image %}{{ assistant.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}');">
+            <img src="{% if assistant.profile.profile_image %}{{ assistant.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="photo" style="display: none" />
           </div>
-          <p class="h6 mb-1">{{ doctor.profile.first_name }} {{ doctor.profile.last_name }}</p>
-          <p class="opacity-75 small mb-2">{{ doctor.profile.country|default:"Pays inconnu" }}</p>
-          <span class="badge badge-light rounded-pill text-bg-theme-accent-1">Docteur</span>
+          <p class="h6 mb-1">{{ assistant.profile.first_name }} {{ assistant.profile.last_name }}</p>
+          <p class="opacity-75 small mb-2">{{ assistant.profile.country|default:"Pays inconnu" }}</p>
+          <span class="badge badge-light rounded-pill text-bg-theme-accent-1">Assistant</span>
         </div>
         <div class="card-footer d-flex justify-content-center align-items-center">
             <button class="btn btn-theme">

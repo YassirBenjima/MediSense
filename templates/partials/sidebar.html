@@ -92,12 +92,23 @@
           <span class="menu-name">Patients</span>
         </a>
       </li>
-
+      <li class="nav-item">
+        <a href="{% url 'schedule_list' %}" class="nav-link">
+          <i class="menu-icon" data-feather="calendar"></i>
+          <span class="menu-name">Schedule</span>
+        </a>
+      </li>
       {% elif user.is_patient %}
       <li class="nav-item">
         <a href="{% url 'doctors_profile' %}" class="nav-link">
           <i class="menu-icon" data-feather="users"></i>
           <span class="menu-name">Find Your Doctor</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'assistants_profile' %}" class="nav-link">
+          <i class="menu-icon" data-feather="users"></i>
+          <span class="menu-name">Find Your Assistant</span>
         </a>
       </li>
       {% endif %}
