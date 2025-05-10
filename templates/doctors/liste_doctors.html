@@ -111,7 +111,7 @@
                 <th>ID</th>
                 <th data-breakpoints="xs sm">Doctor</th>
                 <th data-breakpoints="xs sm md">Contact info</th>
-                <th data-breakpoints="xs sm">Blood Group</th>
+                <th data-breakpoints="xs sm">Profession</th>
                 {% comment %} <th class="all">Recent Schedule</th> {% endcomment %}
                 <th data-breakpoints="xs sm">Weight</th>
                 <th class="all">Action</th>
@@ -151,7 +151,7 @@
                 </td>
                 <td class="text-center">
                   <span class="badge badge-light rounded-pill text-bg-success">
-                    {{ doctor.profile.blood_group|default:"Nothing" }}
+                    {{ doctor.profile.bio|default:"Nothing"|safe }}
                   </span>
                 </td>
                 {% comment %} <td>

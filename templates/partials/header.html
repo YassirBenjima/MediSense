@@ -94,34 +94,42 @@
             class="collapse navbar-collapse right-in-device"
             id="header-navbar"
           >
-            <ul class="navbar-nav mx-lg-3 mb-2 mb-md-0">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'dashboard' %}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'liste_doctors' %}">Doctors</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'liste_assistants' %}"
-                  >Assistants</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'liste_patients' %}"
-                  >Patients</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'schedule_list' %}"
-                  >Schedules</a
-                >
-              </li>
-              {% comment %}
-              <li class="nav-item">
-                <a class="nav-link" href="clinic-aboutus.html">About</a>
-              </li>
-              {% endcomment %}
-            </ul>
+          <ul class="navbar-nav mx-lg-3 mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'dashboard' %}">Home</a>
+            </li>
+          
+            {% if request.user.is_authenticated %}
+              {% if request.user.is_doctor %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'liste_doctors' %}">Doctors</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'liste_assistants' %}">Assistants</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'liste_patients' %}">Patients</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'schedule_list' %}">Schedules</a>
+                </li>
+              
+              {% elif request.user.is_assistant %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'liste_assistants' %}">Assistants</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'liste_patients' %}">Patients</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'schedule_list' %}">Schedules</a>
+                </li>
+              
+              {% elif request.user.is_patient %}
+                {# Only Home is shown for patients #}
+              {% endif %}
+            {% endif %}
+          </ul>          
           </div>
           <div class="ms-auto"></div>
           {% comment %}

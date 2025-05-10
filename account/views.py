@@ -51,30 +51,67 @@ def login_view(request):
 def dashboard(request):
     profile = request.user.profile
     total_patients = User.objects.filter(is_patient=True).count()
-    
-    # Nombre de patients créés dans les 30 derniers jours
+
     thirty_days_ago = timezone.now() - timedelta(days=30)
     new_patients = User.objects.filter(is_patient=True, date_joined__gte=thirty_days_ago).count()
 
     total_assistants = User.objects.filter(is_assistant=True).count()
     total_doctors = User.objects.filter(is_doctor=True).count()
     total_schedule = Schedule.objects.count()
-        
-    # Exemple : total minutes (en utilisant duration_minutes dans ton modèle Schedule)
+
     total_minutes = Schedule.objects.aggregate(Sum('duration_minutes')).get('duration_minutes__sum') or 0
 
     schedules = Schedule.objects.all()
 
+    schedules_patient = Schedule.objects.none()
+
+    if request.user.is_patient:
+        schedules_patient = Schedule.objects.filter(patient=request.user)
+
+    patients = User.objects.filter(is_patient=True).select_related('profile')
+
+    stable_count = 0
+    good_count = 0
+    critical_count = 0
+
+    age_25_plus = 0
+    age_16_30 = 0
+    age_0_15 = 0
+
+    for patient in patients:
+        profile = patient.profile
+        age = calculate_age(profile.birth_date)
+        weight = getattr(profile, 'weight', 0)
+
+        if 18 <= age <= 60 and 50 <= weight <= 90:
+            stable_count += 1
+        elif (age < 18 or age > 60) and (weight >= 45 and weight <= 95):
+            good_count += 1
+        else:
+            critical_count += 1
+
+        if age > 25:
+            age_25_plus += 1
+        elif 16 <= age <= 25:
+            age_16_30 += 1
+        else:
+            age_0_15 += 1
+
     return render(request, 'dashboard.html', {
         'profile': profile,
         'total_patients': total_patients,
-        'new_patients': new_patients,  # Ajout du nombre de nouveaux patients
+        'new_patients': new_patients,
+        'schedules_patient': schedules_patient,
         'total_assistants': total_assistants,
+        'stable_count': stable_count,
+        'good_count': good_count,
+        'critical_count': critical_count,
         'total_doctors': total_doctors,
         'total_schedule': total_schedule,
         'total_minutes': total_minutes,
-        'schedules' : schedules,
+        'schedules': schedules,
     })
+
     
 @login_required
 def myprofile(request):
@@ -501,3 +538,10 @@ def delete_schedule(request, pk):
     schedule.delete()
     messages.success(request, "Appointment deleted successfully.")
     return redirect('schedule_list')
+
+@login_required
+def doctors_profile(request):
+    doctors = User.objects.filter(is_doctor=True).select_related('profile')
+    return render(request, 'doctors/doctors_profile.html', {
+        'doctors': doctors
+    })

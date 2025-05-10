@@ -25,197 +25,112 @@
             </div>
           </div>
         </div>
-        <div class="col-100 col-lg-4 mb-4 text-end">
-          <a href="{% url 'add_assistant' %}" class="btn btn-theme"
-            ><i data-feather="plus" class="me-1"></i>Add Patient</a
-          >
-        </div>
+        {% if request.user.is_doctor or request.user.is_assistant %}
+          <div class="col-100 col-lg-4 mb-4 text-end">
+            <a href="{% url 'add_assistant' %}" class="btn btn-theme"
+              ><i data-feather="plus" class="me-1"></i>Add Patient</a
+            >
+          </div>
+        {% elif request.user.is_patient %}
+          <div class="col-100 col-lg-4 mb-4 text-end">
+            <a href="{% url 'add_assistant' %}" class="btn btn-theme"
+              ><i data-feather="plus" class="me-1"></i>Take in appointment</a
+            >
+          </div>
+        {% endif %}
       </div>
-      <div class="row">
-        <div class="col-12 col-lg-6 col-xxl-3 mb-4">
-          <div class="card adminuiux-card">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-auto">
-                  <div
-                    class="avatar avatar-50 text-center rounded bg-success-subtle text-success-emphasis"
-                  >
-                    <i class="bi bi-people fs-4"></i>
+      {% if request.user.is_doctor or request.user.is_assistant %}
+        <div class="row">
+          <div class="col-12 col-lg-6 col-xxl-3 mb-4">
+            <div class="card adminuiux-card">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <div
+                      class="avatar avatar-50 text-center rounded bg-success-subtle text-success-emphasis"
+                    >
+                      <i class="bi bi-people fs-4"></i>
+                    </div>
                   </div>
-                </div>
-                <div class="col px-0">
-                  <p class="h4 mb-0">{{ total_patients}}</p>
-                  <p class="text-secondary small">Patients</p>
-                </div>
-                <div class="col-auto">
-                  <div class="summarychart height-50 width-60">
-                    <canvas id="areachartgreen1"></canvas>
+                  <div class="col px-0">
+                    <p class="h4 mb-0">{{total_patients}}</p>
+                    <p class="text-secondary small">Patients</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="summarychart height-50 width-60">
+                      <canvas id="areachartgreen1"></canvas>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-12 col-lg-6 col-xxl-3 mb-4">
-          <div class="card adminuiux-card">
-            <div class="card-body">
-              <div class="row gx-3 align-items-center">
-                <div class="col-auto">
-                  <div
-                    class="avatar avatar-50 text-center rounded bg-info-subtle text-info-emphasis"
-                  >
-                    <i class="bi bi-person-badge fs-4"></i>
+          <div class="col-12 col-lg-6 col-xxl-3 mb-4">
+            <div class="card adminuiux-card">
+              <div class="card-body">
+                <div class="row gx-3 align-items-center">
+                  <div class="col-auto">
+                    <div
+                      class="avatar avatar-50 text-center rounded bg-info-subtle text-info-emphasis"
+                    >
+                      <i class="bi bi-person-badge fs-4"></i>
+                    </div>
                   </div>
-                </div>
-                <div class="col">
-                  <p class="h4 mb-0">{{ total_assistants}}</p>
-                  <p class="text-secondary small">Assistants</p>
-                </div>
-                <div class="col-auto">
-                  <div class="summarychart height-50 width-60">
-                    <canvas id="areachartblue1"></canvas>
+                  <div class="col">
+                    <p class="h4 mb-0">{{ total_assistants}}</p>
+                    <p class="text-secondary small">Assistants</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="summarychart height-50 width-60">
+                      <canvas id="areachartblue1"></canvas>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-12 col-lg-6 col-xxl-3 mb-4">
-          <div class="card adminuiux-card">
-            <div class="card-body">
-              <div class="row gx-3 align-items-center">
-                <div class="col-auto">
-                  <div
-                    class="avatar avatar-50 text-center rounded bg-warning-subtle text-warning-emphasis"
-                  >
-                    <i class="bi bi-hospital fs-4"></i>
+          <div class="col-12 col-lg-6 col-xxl-3 mb-4">
+            <div class="card adminuiux-card">
+              <div class="card-body">
+                <div class="row gx-3 align-items-center">
+                  <div class="col-auto">
+                    <div
+                      class="avatar avatar-50 text-center rounded bg-warning-subtle text-warning-emphasis"
+                    >
+                      <i class="bi bi-hospital fs-4"></i>
+                    </div>
                   </div>
-                </div>
-                <div class="col">
-                  <p class="h4 mb-0">{{ total_doctors}}</p>
-                  <p class="text-secondary small">Doctors</p>
-                </div>
-                <div class="col-auto">
-                  <div class="summarychart height-50 width-60">
-                    <canvas id="areachartyellow1"></canvas>
+                  <div class="col">
+                    <p class="h4 mb-0">{{ total_doctors}}</p>
+                    <p class="text-secondary small">Doctors</p>
+                  </div>
+                  <div class="col-auto">
+                    <div class="summarychart height-50 width-60">
+                      <canvas id="areachartyellow1"></canvas>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-12 col-lg-6 col-xxl-3 mb-4">
-          <div class="card adminuiux-card">
-            <div class="card-body">
-              <div class="row gx-3 align-items-center">
-                <div class="col-auto">
-                  <div
-                    class="avatar avatar-50 text-center rounded bg-danger-subtle text-danger-emphasis"
-                  >
-                    <i class="bi bi-calendar-week fs-4"></i>
-                  </div>
-                </div>
-                <div class="col">
-                  <p class="h4 mb-0">{{ total_schedules}}</p>
-                  <p class="text-secondary small">Schedule</p>
-                </div>
-                <div class="col-auto">
-                  <div class="summarychart height-50 width-60">
-                    <canvas id="areachartred1"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-lg-12 col-xxl-9">
-          <div class="row">
-            <div class="col-12 col-lg-6 col-xxl-8 mb-4">
-              <div class="card adminuiux-card">
-                <div class="card-header">
-                  <p class="h6 mb-4">Patient Visits</p>
-                  <div class="row">
-                    <div class="col-auto">
-                      <p class="h4 mb-1">{{ total_patients }}</p>
-                      <p class="opacity-50">Patients</p>
-                    </div>
-                    <div class="col-auto">
-                      <p class="h4 mb-1">{{ total_minutes }}</p>
-                      <p class="opacity-50">Minutes</p>
-                    </div>
-                    <div class="col-auto">
-                      <p class="h4 mb-1">{{ new_patients }}</p>
-                      <p class="opacity-50">New Patients</p>  <!-- Nouveau champ -->
+          <div class="col-12 col-lg-6 col-xxl-3 mb-4">
+            <div class="card adminuiux-card">
+              <div class="card-body">
+                <div class="row gx-3 align-items-center">
+                  <div class="col-auto">
+                    <div
+                      class="avatar avatar-50 text-center rounded bg-danger-subtle text-danger-emphasis"
+                    >
+                      <i class="bi bi-calendar-week fs-4"></i>
                     </div>
                   </div>
-                </div>
-                <div class="card-body">
-                  <div class="w-100 height-190">
-                    <canvas id="patientsummary"></canvas>
+                  <div class="col">
+                    <p class="h4 mb-0">{{ total_schedule}}</p>
+                    <p class="text-secondary small">Schedule</p>
                   </div>
-                </div>
-              </div>
-            </div>
-          
-            <div class="col-12 col-lg-6">
-              <div class="row">
-                <div class="col mb-4">
-                  <div class="card adminuiux-card bg-success-subtle">
-                    <div class="card-body">
-                      <i
-                        class="bi bi-balloon-heart fs-4 avatar avatar-50 bg-success text-white rounded mb-2"
-                      ></i>
-                      <p class="h4 mb-0">22</p>
-                      <p class="small opacity-75">Stable Patient</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col mb-4">
-                  <div class="card adminuiux-card bg-warning-subtle">
-                    <div class="card-body">
-                      <i
-                        class="bi bi-activity fs-4 avatar avatar-50 bg-warning text-white rounded mb-2"
-                      ></i>
-                      <p class="h4 mb-0">12</p>
-                      <p class="small opacity-75">Good Patient</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col mb-4">
-                  <div class="card adminuiux-card bg-orange-subtle">
-                    <div class="card-body">
-                      <i
-                        class="bi bi-heart-pulse fs-4 avatar avatar-50 bg-orange text-white rounded mb-2"
-                      ></i>
-                      <p class="h4 mb-0">2</p>
-                      <p class="small opacity-75">Critical Patient</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-lg-6 mb-4">
-              <div class="card adminuiux-card bg-theme-1-space">
-                <div class="card-header">
-                  <p class="h6">
-                    <i data-feather="user" class="me-2"></i> Patient Age Range
-                  </p>
-                </div>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-auto">
-                      <p class="h4 mb-1">21</p>
-                      <p class="opacity-75">25+ Years</p>
-                    </div>
-                    <div class="col-auto">
-                      <p class="h4 mb-1">8</p>
-                      <p class="opacity-75">16-30 Years</p>
-                    </div>
-                    <div class="col-auto">
-                      <p class="h4 mb-1">5</p>
-                      <p class="opacity-75">0-15 Years</p>
+                  <div class="col-auto">
+                    <div class="summarychart height-50 width-60">
+                      <canvas id="areachartred1"></canvas>
                     </div>
                   </div>
                 </div>
@@ -223,158 +138,317 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="card adminuiux-card mb-4">
-            <div class="card-header">
-              <p class="h6">Patient Appointments</p>
-            </div>
-            <div class="card-body px-2">
-              <table class="table mb-0" id="dataTable">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th data-breakpoints="xs sm">Schedule</th>
-                    <th data-breakpoints="xs sm md">Patient</th>
-                    <th data-breakpoints="xs sm md">Doctor</th>
-                    <th data-breakpoints="xs sm md">Disease</th>
-                    <th class="all">Contact Info</th>
-                    <th data-breakpoints="xs sm">Status</th>
-                    <th class="all">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for schedule in schedules %}
-                  <tr>
-                    <td class="text-center">{{ schedule.id }}</td>
-                    <td>
-                      <p class="mb-0">{{ schedule.time|time:"g:i A" }}</p>
-                      <p class="text-secondary small">
-                          {{ schedule.date|date:"j F Y" }}
-                      </p>
-                    </td>
-                    <td>
-                      <div class="row align-items-center flex-nowrap">
-                        <div class="col-auto">
-                          <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
-                            <img src="{% if schedule.patient.profile.profile_image %}{{ schedule.patient.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
-                          </figure>
+        <div class="row">
+          <div class="col-12">
+            <div class="card adminuiux-card mb-4">
+              <div class="card-header">
+                <p class="h6">Patient Appointments</p>
+              </div>
+              <div class="card-body px-2">
+                <table class="table mb-0" id="dataTable">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th data-breakpoints="xs sm">Schedule</th>
+                      <th data-breakpoints="xs sm md">Patient</th>
+                      <th data-breakpoints="xs sm md">Doctor</th>
+                      <th data-breakpoints="xs sm md">Disease</th>
+                      <th class="all">Contact Info</th>
+                      <th data-breakpoints="xs sm">Status</th>
+                      <th class="all">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for schedule in schedules %}
+                    <tr>
+                      <td class="text-center">{{ schedule.id }}</td>
+                      <td>
+                        <p class="mb-0">{{ schedule.time|time:"g:i A" }}</p>
+                        <p class="text-secondary small">
+                            {{ schedule.date|date:"j F Y" }}
+                        </p>
+                      </td>
+                      <td>
+                        <div class="row align-items-center flex-nowrap">
+                          <div class="col-auto">
+                            <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
+                              <img src="{% if schedule.patient.profile.profile_image %}{{ schedule.patient.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
+                            </figure>
+                          </div>
+                          <div class="col ps-0">
+                            <p class="mb-0 fw-medium">
+                              {% if schedule.patient.profile.first_name or schedule.patient.profile.last_name %}
+                                {{ schedule.patient.profile.first_name }} {{ schedule.patient.profile.last_name }}
+                              {% else %}
+                                {{ schedule.patient.username }}
+                              {% endif %}
+                            </p>
+                            <p class="text-secondary small">
+                              {{ schedule.patient.profile.city }}, {{ schedule.patient.profile.country }}
+                            </p>
+                          </div>
                         </div>
-                        <div class="col ps-0">
-                          <p class="mb-0 fw-medium">
-                            {% if schedule.patient.profile.first_name or schedule.patient.profile.last_name %}
-                              {{ schedule.patient.profile.first_name }} {{ schedule.patient.profile.last_name }}
-                            {% else %}
-                              {{ schedule.patient.username }}
-                            {% endif %}
-                          </p>
-                          <p class="text-secondary small">
-                            {{ schedule.patient.profile.city }}, {{ schedule.patient.profile.country }}
-                          </p>
+                      </td> 
+                      <td>
+                        <div class="row align-items-center flex-nowrap">
+                          <div class="col-auto">
+                            <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
+                              <img src="{% if schedule.doctor.profile.profile_image %}{{ schedule.doctor.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
+                            </figure>
+                          </div>
+                          <div class="col ps-0">
+                            <p class="mb-0 fw-medium">
+                              {% if schedule.doctor.profile.first_name or schedule.doctor.profile.last_name %}
+                                {{ schedule.doctor.profile.first_name }} {{ schedule.doctor.profile.last_name }}
+                              {% else %}
+                                {{ schedule.doctor.username }}
+                              {% endif %}
+                            </p>
+                            <p class="text-secondary small">
+                              {{ schedule.doctor.profile.city }}, {{ schedule.doctor.profile.country }}
+                            </p>
+                          </div>
                         </div>
+                      </td>                    
+                      <td>
+                        <p class="mb-0">{{ schedule.disease }}</p>
+                        <p class="text-secondary small">
+                          {{ schedule.symptoms_description|striptags }}
+                        </p>
+                      </td>
+                      <td class="text-center">
+                        <p class="badge badge-light rounded-pill text-bg-primary">
+                          {{ schedule.contact_info}}
+                        </p>
+                      </td>
+                      <td class="text-center"> 
+                        <span class="badge badge-light rounded-pill 
+                          {% if schedule.status == 'pending' %} text-bg-warning 
+                          {% elif schedule.status == 'confirmed' %} text-bg-info 
+                          {% elif schedule.status == 'completed' %} text-bg-success 
+                          {% elif schedule.status == 'cancelled' %} text-bg-danger 
+                          {% else %} text-bg-secondary 
+                          {% endif %}">
+                          {{ schedule.status }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="dropdown d-inline-block">
+                          <a class="btn btn-link no-caret" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots"></i>
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                              <a class="dropdown-item" href="{% url 'schedule_update' schedule.id %}"><i data-feather="edit" class="me-0 me-md-1 fs-5"></i> Edit</a>
+                            </li>
+                            
+                            <li>
+                              <a
+                                class="dropdown-item theme-red"
+                                href="{% url 'schedule_delete' schedule.id %}"
+                                onclick="return confirm('Are you sure you want to delete this schedule ?');"
+                              >
+                                <i data-feather="trash-2" class="me-0 me-md-1 fs-5"></i> Delete
+                              </a>
+                            </li>                       
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-4">
+            <div class="card adminuiux-card">
+              <div class="card-header">
+                <p class="h6 mb-4">Patient Visits</p>
+                <div class="row">
+                  <div class="col-auto">
+                    <p class="h4 mb-1">{{ total_patients }}</p>
+                    <p class="opacity-50">Patients</p>
+                  </div>
+                  <div class="col-auto">
+                    <p class="h4 mb-1">{{ total_minutes }}</p>
+                    <p class="opacity-50">Minutes</p>
+                  </div>
+                  <div class="col-auto">
+                    <p class="h4 mb-1">{{ new_patients }}</p>
+                    <p class="opacity-50">New Patients</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="w-100 height-190">
+                  <canvas id="patientsummary"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-4">
+            <div class="row">
+              <div class="col mb-4">
+                <div class="card adminuiux-card bg-success-subtle">
+                  <div class="card-body">
+                    <i class="bi bi-balloon-heart fs-4 avatar avatar-50 bg-success text-white rounded mb-2"></i>
+                    <p class="h4 mb-0">{{stable_count}}</p>
+                    <p class="small opacity-75">Stable Patient</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col mb-4">
+                <div class="card adminuiux-card bg-warning-subtle">
+                  <div class="card-body">
+                    <i class="bi bi-activity fs-4 avatar avatar-50 bg-warning text-white rounded mb-2"></i>
+                    <p class="h4 mb-0">{{good_count}}</p>
+                    <p class="small opacity-75">Good Patient</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col mb-4">
+                <div class="card adminuiux-card bg-orange-subtle">
+                  <div class="card-body">
+                    <i class="bi bi-heart-pulse fs-4 avatar avatar-50 bg-orange text-white rounded mb-2"></i>
+                    <p class="h4 mb-0">{{critical_count}}</p>
+                    <p class="small opacity-75">Critical Patient</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="card adminuiux-card bg-theme-1-space">
+                  <div class="card-header">
+                    <p class="h6">
+                      <i data-feather="user" class="me-2"></i> Patient Age Range
+                    </p>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-auto">
+                        <p class="h4 mb-1">21</p>
+                        <p class="opacity-75">25+ Years</p>
                       </div>
-                    </td> 
-                    <td>
-                      <div class="row align-items-center flex-nowrap">
-                        <div class="col-auto">
-                          <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
-                            <img src="{% if schedule.doctor.profile.profile_image %}{{ schedule.doctor.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
-                          </figure>
-                        </div>
-                        <div class="col ps-0">
-                          <p class="mb-0 fw-medium">
-                            {% if schedule.doctor.profile.first_name or schedule.doctor.profile.last_name %}
-                              {{ schedule.doctor.profile.first_name }} {{ schedule.doctor.profile.last_name }}
-                            {% else %}
-                              {{ schedule.doctor.username }}
-                            {% endif %}
-                          </p>
-                          <p class="text-secondary small">
-                            {{ schedule.doctor.profile.city }}, {{ schedule.doctor.profile.country }}
-                          </p>
-                        </div>
+                      <div class="col-auto">
+                        <p class="h4 mb-1">8</p>
+                        <p class="opacity-75">16-30 Years</p>
                       </div>
-                    </td>                    
-                    <td>
-                      <p class="mb-0">{{ schedule.disease }}</p>
-                      <p class="text-secondary small">
-                        {{ schedule.symptoms_description|striptags }}
-                      </p>
-                    </td>
-                    <td class="text-center">
-                      <p class="badge badge-light rounded-pill text-bg-primary">
-                        {{ schedule.contact_info}}
-                      </p>
-                    </td>
-                    {% comment %} <td>
-                      <p class="mb-0">
-                        {{ doctor.profile.last_appointment|date:"g:i A - j F Y" }}
-                      </p>
-                      <p class="text-secondary small">
-                        {{ doctor.profile.reason }} - {{ doctor.profile.doctor }}
-                      </p>
-                    </td> {% endcomment %}
-                    <td class="text-center"> 
-                      <span class="badge badge-light rounded-pill 
-                        {% if schedule.status == 'pending' %} text-bg-warning 
-                        {% elif schedule.status == 'confirmed' %} text-bg-info 
-                        {% elif schedule.status == 'completed' %} text-bg-success 
-                        {% elif schedule.status == 'cancelled' %} text-bg-danger 
-                        {% else %} text-bg-secondary 
-                        {% endif %}">
-                        {{ schedule.status }}
-                      </span>
-                    </td>
-                    
-    
-                    {% comment %} <td class="text-center">
-                      <span class="badge badge-light rounded-pill 
-                        {% if schedule.status == 'pending' %}text-bg-warning{% elif schedule.status == 'confirmed' %}text-bg-info{% elif schedule.status == 'completed' %}text-bg-success{% elif schedule.status == 'cancelled' %}text-bg-danger{% endif %}">
-                        {{ schedule.status }}
-                      </span>
-                    </td> {% endcomment %}
-                    
-                    <td>
-                      {% comment %}
-                      <a
-                        href="{% url 'view_doctor' doctor.id %}"
-                        class="btn btn-square btn-link"
-                        data-bs-toggle="tooltip"
-                        title="View"
-                      >
-                        <i class="bi bi-eye"></i>
-                      </a>
-                      {% endcomment %}
-                      <div class="dropdown d-inline-block">
-                        <a class="btn btn-link no-caret" data-bs-toggle="dropdown">
-                          <i class="bi bi-three-dots"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                          <li>
-                            <a class="dropdown-item" href="{% url 'schedule_update' schedule.id %}"><i data-feather="edit" class="me-0 me-md-1 fs-5"></i> Edit</a>
-                          </li>
-                          
-                          <li>
-                            <a
-                              class="dropdown-item theme-red"
-                              href="{% url 'schedule_delete' schedule.id %}"
-                              onclick="return confirm('Are you sure you want to delete this schedule ?');"
-                            >
-                              <i data-feather="trash-2" class="me-0 me-md-1 fs-5"></i> Delete
-                            </a>
-                          </li>                       
-                        </ul>
+                      <div class="col-auto">
+                        <p class="h4 mb-1">5</p>
+                        <p class="opacity-75">0-15 Years</p>
                       </div>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>        
+        </div>
+      {% elif request.user.is_patient %}
+        <div class="row">
+          <div class="col-12">
+            <div class="card adminuiux-card mb-4">
+              <div class="card-header">
+                <p class="h6">Patient Appointments</p>
+              </div>
+              <div class="card-body px-2">
+                <table class="table mb-0" id="dataTable">
+                  <thead>
+                    <tr>
+                      <th data-breakpoints="xs sm">Schedule</th>
+                      <th data-breakpoints="xs sm md">Patient</th>
+                      <th data-breakpoints="xs sm md">Doctor</th>
+                      <th data-breakpoints="xs sm md">Disease</th>
+                      <th class="all">Contact Info</th>
+                      <th data-breakpoints="xs sm">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for schedule in schedules_patient %}
+                    <tr>
+                      <td>
+                        <p class="mb-0">{{ schedule.time|time:"g:i A" }}</p>
+                        <p class="text-secondary small">
+                            {{ schedule.date|date:"j F Y" }}
+                        </p>
+                      </td>
+                      <td>
+                        <div class="row align-items-center flex-nowrap">
+                          <div class="col-auto">
+                            <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
+                              <img src="{% if schedule.patient.profile.profile_image %}{{ schedule.patient.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
+                            </figure>
+                          </div>
+                          <div class="col ps-0">
+                            <p class="mb-0 fw-medium">
+                              {% if schedule.patient.profile.first_name or schedule.patient.profile.last_name %}
+                                {{ schedule.patient.profile.first_name }} {{ schedule.patient.profile.last_name }}
+                              {% else %}
+                                {{ schedule.patient.username }}
+                              {% endif %}
+                            </p>
+                            <p class="text-secondary small">
+                              {{ schedule.patient.profile.city }}, {{ schedule.patient.profile.country }}
+                            </p>
+                          </div>
+                        </div>
+                      </td> 
+                      <td>
+                        <div class="row align-items-center flex-nowrap">
+                          <div class="col-auto">
+                            <figure class="avatar avatar-40 mb-0 coverimg rounded-circle">
+                              <img src="{% if schedule.doctor.profile.profile_image %}{{ schedule.doctor.profile.profile_image.url }}{% else %}{% static 'assets/img/modern-ai-image/user-4.jpg' %}{% endif %}" alt="Profile Image" />
+                            </figure>
+                          </div>
+                          <div class="col ps-0">
+                            <p class="mb-0 fw-medium">
+                              {% if schedule.doctor.profile.first_name or schedule.doctor.profile.last_name %}
+                                {{ schedule.doctor.profile.first_name }} {{ schedule.doctor.profile.last_name }}
+                              {% else %}
+                                {{ schedule.doctor.username }}
+                              {% endif %}
+                            </p>
+                            <p class="text-secondary small">
+                              {{ schedule.doctor.profile.city }}, {{ schedule.doctor.profile.country }}
+                            </p>
+                          </div>
+                        </div>
+                      </td>                    
+                      <td>
+                        <p class="mb-0">{{ schedule.disease }}</p>
+                        <p class="text-secondary small">
+                          {{ schedule.symptoms_description|striptags }}
+                        </p>
+                      </td>
+                      <td class="text-center">
+                        <p class="badge badge-light rounded-pill text-bg-primary">
+                          {{ schedule.contact_info}}
+                        </p>
+                      </td>
+                      <td class="text-center"> 
+                        <span class="badge badge-light rounded-pill 
+                          {% if schedule.status == 'pending' %} text-bg-warning 
+                          {% elif schedule.status == 'confirmed' %} text-bg-info 
+                          {% elif schedule.status == 'completed' %} text-bg-success 
+                          {% elif schedule.status == 'cancelled' %} text-bg-danger 
+                          {% else %} text-bg-secondary 
+                          {% endif %}">
+                          {{ schedule.status }}
+                        </span>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      {% endif %}
     </div>
   </main>
 </div>
