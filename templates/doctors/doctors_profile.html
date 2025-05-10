@@ -117,10 +117,13 @@
           <span class="badge badge-light rounded-pill text-bg-theme-accent-1">Docteur</span>
         </div>
         <div class="card-footer d-flex justify-content-center align-items-center">
-            <button class="btn btn-theme">
-                <span>Take in appointment</span>
-            </button>
+          <a href="https://wa.me/{{ doctor.profile.phone_number|default_if_none:''|urlencode }}"
+            target="_blank"
+            class="btn btn-theme">
+            <span>Contact on WhatsApp</span>
+          </a>
         </div>
+
       </div>
     </div>
     {% endfor %}

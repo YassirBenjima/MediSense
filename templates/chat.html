@@ -1,0 +1,296 @@
+{% include 'partials/header.html' %}
+<div class="adminuiux-wrap">
+  {% load static %} {% include 'partials/sidebar.html' %} {% block content %}
+  <main
+    class="adminuiux-content has-sidebar"
+    onclick="contentClick()"
+    style="padding-top: 68px"
+  >
+    <div class="container-fluid mt-3">
+      <div class="bg-theme-1-subtle rounded px-3 py-3">
+        <div class="row gx-3 align-items-center">
+          <div class="col col-sm mb-2 mb-sm-0">
+            <p class="h5">Chat</p>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item bi">
+                  <a href="{% url 'dashboard' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item active bi" aria-current="page">
+                  Chat
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid mt-4" id="main-content">
+      <div class="inner-sidebar-wrap">
+        <div class="inner-sidebar-content h-100">
+          <div class="row gx-3 h-100 mx-0">
+            <div
+              class="col-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 height-dynamic"
+              style="--h-dynamic: calc(100vh - 260px)"
+            >
+              <div class="card adminuiux-card h-100 mb-3">
+                <div class="card-header border-bottom">
+                  <div class="row align-items-center gx-2">
+                    <div class="col-auto d-block d-lg-none">
+                      <button
+                        class="btn btn-link btn-square innersidebar-btn"
+                        onclick="innersidebar()"
+                      >
+                        <i class="bi bi-layout-sidebar h5 vm"></i>
+                      </button>
+                    </div>
+                    <div class="col-auto">
+                      <div class="row align-items-center gx-2">
+                        <div class="col-auto">
+                          {% load static %}
+                          <figure
+                            class="avatar avatar-40 coverimg rounded-circle"
+                            style="
+                              background-image: url('{% static 'assets/img/modern-ai-image/bus-2.jpg' %}');
+                            "
+                          >
+                            <img
+                              src="{% static 'assets/img/modern-ai-image/bus-2.jpg' %}"
+                              alt=""
+                              style="display: none"
+                            />
+                          </figure>
+                        </div>
+                        <div class="col align-self-center">
+                          <p class="h6 mb-0">
+                            <span class="position-relative"
+                              >MediSense Chat</span
+                            >
+                          </p>
+                          <p class="text-secondary small">
+                            Powered By Yassir Benjima
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col"></div>
+                  </div>
+                </div>
+                <div
+                  class="card-body overflow-y-auto chat-list"
+                  id="chat-history"
+                >
+                  <!-- Dynamic chat messages will appear here -->
+                </div>
+                <div class="card-footer border-top">
+                  <div class="input-group">
+                    <input
+                      type="hidden"
+                      name="csrfmiddlewaretoken"
+                      value="{{ csrf_token }}"
+                    />
+                    <input
+                      id="user-input"
+                      class="form-control border-0"
+                      placeholder="Type your message..."
+                    />
+                    <button
+                      id="send-btn"
+                      class="btn btn-square btn-link"
+                      type="button"
+                    >
+                      <i class="bi bi-send"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal adminuiux-modal fade"
+      id="callmodal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-fullscreen-lg-down">
+        <div class="modal-content">
+          <div class="modal-body p-0 position-relative">
+            <video
+              src="assets/img/clinic/4260694-sd_540_960_25fps.mp4"
+              autoplay=""
+              loop=""
+              class="top-0 start-0 w-100 h-100 z-index-0 d-block rounded"
+            ></video>
+            <div
+              class="position-absolute bottom-0 start-0 end-0 m-3 m-lg-4 rounded z-index-1"
+            >
+              <div class="row justify-content-center">
+                <div class="col-auto mb-3 position-relative">
+                  <button
+                    type="button"
+                    class="btn btn-light btn-square rounded-circle position-absolute top-0 end-0 mt-1 mx-3"
+                  >
+                    <i class="bi bi-mic h-auto w-auto"></i></button
+                  ><video
+                    src="assets/img/clinic/5453694-sd_540_960_25fps.mp4"
+                    autoplay=""
+                    loop=""
+                    class="top-0 start-0 width-100 h-auto z-index-0 d-block rounded border border-2 shadow"
+                  ></video>
+                </div>
+                <div class="col-auto mb-3 position-relative">
+                  <button
+                    type="button"
+                    class="btn btn-light btn-square rounded-circle position-absolute top-0 end-0 mt-1 mx-3"
+                  >
+                    <i class="bi bi-mic h-auto w-auto"></i></button
+                  ><video
+                    src="assets/img/clinic/5356413-sd_540_960_25fps.mp4"
+                    autoplay=""
+                    loop=""
+                    class="top-0 start-0 width-100 h-auto z-index-0 d-block rounded border border-2 shadow"
+                  ></video>
+                </div>
+              </div>
+              <div
+                class="row gx-3 align-items-end justify-content-center mx-0 overlay-option p-3 rounded"
+              >
+                <div class="col-auto">
+                  <button
+                    type="button"
+                    class="btn btn-light avatar avatar-60 rounded-circle"
+                  >
+                    <i class="bi bi-mic-mute h-auto w-auto fs-4"></i>
+                  </button>
+                </div>
+                <div class="col-auto">
+                  <button
+                    type="button"
+                    class="btn btn-accent avatar avatar-60 rounded-circle"
+                  >
+                    <i class="bi bi-camera-video h-auto w-auto fs-4"></i>
+                  </button>
+                </div>
+                <div class="col-auto">
+                  <button
+                    type="button"
+                    class="btn btn-light avatar avatar-60 rounded-circle"
+                  >
+                    <i class="bi bi-volume-up h-auto w-auto fs-4"></i>
+                  </button>
+                </div>
+                <div class="col-auto">
+                  <button
+                    type="button"
+                    class="btn btn-danger avatar avatar-60 rounded-circle"
+                    data-bs-dismiss="modal"
+                  >
+                    <i class="bi bi-telephone-x h-auto w-auto fs-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %} {% include 'partials/footer.html' %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Send message to backend on button click
+    $("#send-btn").on("click", function () {
+      var userMessage = $("#user-input").val();
+      if (userMessage.trim() !== "") {
+        // Add user message to chat history
+        $("#chat-history").append(`
+        <div class="row no-margin left-chat">
+          <div class="col-12">
+            <div class="chat-block">
+              <div class="row">
+                <div class="col">
+                  <p class="small mb-2"><a href="#" class="style-none">You</a></p>
+                  <p>${userMessage}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <p class="text-secondary small time"><i class="bi bi-check"></i> Just Now</p>
+          </div>
+        </div>
+      `);
+
+        // Clear input field
+        $("#user-input").val("");
+
+        // Make AJAX request to backend
+        $.ajax({
+          url: "{% url 'chat' %}",
+          type: "POST",
+          data: {
+            user_input: userMessage,
+            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+          },
+          success: function (data) {
+            // Remove waiting message
+            $(".right-chat p:contains('Waiting for response...')")
+              .parent()
+              .parent()
+              .remove();
+
+            // Add Gemini's response to chat history
+            $("#chat-history").append(`
+            <div class="row no-margin right-chat">
+              <div class="col-12">
+                <div class="chat-block">
+                  <div class="row">
+                    <div class="col">
+                      <p>${data.response}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 text-end">
+                <p class="text-secondary small time"><i class="bi bi-check"></i> Just Now</p>
+              </div>
+            </div>
+          `);
+          },
+          error: function () {
+            $("#chat-history").append(`
+            <div class="row no-margin right-chat">
+              <div class="col-12">
+                <div class="chat-block">
+                  <div class="row">
+                    <div class="col">
+                      <p>Sorry, something went wrong. Please try again.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 text-end">
+                <p class="text-secondary small time"><i class="bi bi-check"></i> Just Now</p>
+              </div>
+            </div>
+          `);
+          },
+        });
+      }
+    });
+
+    // Optional: Submit form on Enter key press
+    $("#user-input").on("keypress", function (e) {
+      if (e.which === 13) {
+        // Enter key
+        $("#send-btn").click();
+      }
+    });
+  });
+</script>

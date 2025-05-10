@@ -129,3 +129,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = 'login_view'
+
+GEMINI_API_KEY = "AIzaSyC2a8RSKkFV3tOACks2T6LD-HGd9eQrSaM"

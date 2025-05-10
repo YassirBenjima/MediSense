@@ -8,6 +8,11 @@ from datetime import date
 from django.db.models import Q,Sum
 from datetime import timedelta
 from django.utils import timezone
+import google.generativeai as genai
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import markdown
 
 # Create your views here.
 # def index(request):
@@ -539,10 +544,6 @@ def delete_schedule(request, pk):
     messages.success(request, "Appointment deleted successfully.")
     return redirect('schedule_list')
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import User
-
 @login_required
 def doctors_profile(request):
     search = request.GET.get('search', '')
@@ -594,3 +595,27 @@ def assistants_profile(request):
         'country': country,
         'bio': bio,
     })
+
+
+
+genai.configure(api_key=settings.GEMINI_API_KEY)
+
+def chat(request):
+    if request.method == "POST":
+        user_input = request.POST.get('user_input')
+
+        if user_input:
+            contexte = """
+                You are a skilled and empathetic doctor. Your primary task is to understand the patient's symptoms or concerns, identify the possible illness or health issue, and provide a clear, appropriate solution or guidance. Ask relevant follow-up questions if necessary to ensure an accurate diagnosis. Always communicate in a calm, respectful, and professional tone, ensuring the patient feels heard and supported.
+                If the patient asks for a location, respond using Google Maps data to provide accurate and helpful location details. This should include the doctor’s address, nearby landmarks, and estimated distance from the patient (if available). Only recommend doctors who are located in Morocco. Ensure that the doctor’s specialty matches the patient’s needs. Also include important information such as consultation hours, contact details, and a Google Maps link for easy navigation.
+            """
+            prompt = f"{contexte}\n\nQuestion: {user_input}\nRéponse:"
+            try:
+                model = genai.GenerativeModel(model_name='models/gemini-2.0-flash')
+                response = model.generate_content(prompt)
+                html_response = markdown.markdown(response.text)
+                return JsonResponse({'response': html_response})
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+
+    return render(request, 'chat.html')

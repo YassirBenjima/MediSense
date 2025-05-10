@@ -115,12 +115,14 @@
     </ul>
     <div class="mt-auto"></div>
     <ul class="nav flex-column menu-active-line">
+      {% if user.is_patient %}
       <li class="nav-item">
-        <a href="clinic-chat-call.html" class="nav-link"
+        <a href="{% url 'chat' %}" class="nav-link"
           ><i class="menu-icon" data-feather="message-circle"></i>
-          <span class="menu-name">Chat & Calls</span></a
+          <span class="menu-name">Chat</span></a
         >
       </li>
+      {% endif %}
       <li class="nav-item">
         <a href="{% url 'settings' %}" class="nav-link"
           ><i class="menu-icon" data-feather="settings"></i>

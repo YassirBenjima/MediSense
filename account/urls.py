@@ -29,5 +29,7 @@ urlpatterns = [
     # Patient
     path('doctors_profile',views.doctors_profile,name='doctors_profile'),
     path('assistants_profile',views.assistants_profile,name='assistants_profile'),
+    #chat
+    path('chat',views.chat,name='chat'),
 
 ]
