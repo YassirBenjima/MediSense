@@ -87,5 +87,47 @@ MediSense vise à moderniser le parcours de soin en offrant :
 
 ---
 
+## 📂 Structure du Projet
+
+L'organisation des fichiers suit l'architecture standard de Django, structurée comme suit :
+
+### 📁 Racine du Projet
+- **`manage.py`** : L'outil en ligne de commande de Django pour la gestion du projet (serveur, migrations, etc.).
+- **`db.sqlite3`** : La base de données locale par défaut.
+- **`README.md`** : Documentation principale du projet.
+
+---
+
+### 📁 `medisenese/` (Configuration)
+Dossier de configuration globale du projet :
+- **`settings.py`** : Configuration principale (Database, Apps, API Keys Gemini, etc.).
+- **`urls.py`** : Déclaration des routes principales et routage vers les applications.
+- **`wsgi.py` / `asgi.py`** : Points d'entrée pour le déploiement sur les serveurs web.
+
+---
+
+### 📁 `account/` (Application Principale)
+Contient toute la logique métier liée aux utilisateurs et aux fonctionnalités médicales :
+- **`models.py`** : Définition des entités `User`, `Profile` et `Schedule` (Rendez-vous).
+- **`views.py`** : Logique de traitement des requêtes (Authentification, Dashboard, gestion des RDV, Chat IA).
+- **`urls.py`** : Définition des routes spécifiques à l'application `account`.
+- **`forms.py`** : Formulaires personnalisés pour l'inscription, le profil et la prise de rendez-vous.
+
+---
+
+### 📁 `templates/` (Interface Utilisateur)
+Regroupe tous les fichiers HTML organisés par rôle :
+- **`doctors/`**, **`patients/`**, **`assistants/`** : Pages spécifiques à chaque type d'utilisateur.
+- **`chat.html`** : Interface de l'assistant intelligent Gemini.
+- **`dashboard.html`** : Tableau de bord principal.
+- **`partials/`** : Composants réutilisables (Navbar, Sidebar).
+
+---
+
+### 📁 `static/` (Ressources Statiques)
+Contient les fichiers CSS, images et scripts JavaScript pour styliser l'application.
+
+---
+
 ## 👤 Auteurs
 Projet développé dans le cadre du cursus **5IIR** par **Yassir Benjima**.
