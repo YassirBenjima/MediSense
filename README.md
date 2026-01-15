@@ -129,5 +129,27 @@ Contient les fichiers CSS, images et scripts JavaScript pour styliser l'applicat
 
 ---
 
+## 🤖 Intégration de l'IA (Gemini AI)
+
+**MediSense** intègre l'intelligence artificielle pour transformer la gestion médicale en une expérience assistée. Voici les détails techniques de cette intégration :
+
+### 1. Le Moteur : Google Gemini
+- **Modèle** : `models/gemini-2.0-flash`.
+- **Bibliothèque** : `google-generativeai`.
+- **Formatage** : Les réponses sont converties du Markdown vers le HTML via la bibliothèque `markdown` de Python pour un affichage propre.
+
+### 2. Prompt Engineering (Contexte Médical)
+L'IA est configurée avec un **System Prompt** rigoureux qui définit son comportement :
+- **Rôle** : Médecin expert et empathique.
+- **Objectif** : Analyser les symptômes, identifier les pathologies potentielles et suggérer des actions concrètes.
+- **Localisation** : Capacité à recommander des médecins et cliniques au **Maroc** en utilisant des données de géolocalisation.
+
+### 3. Flux Technique
+1.  **Frontend** : L'utilisateur envoie son message via l'interface `chat.html`.
+2.  **Logic (Backend)** : La vue `chat` dans `account/views.py` intercepte la requête, injecte le contexte de sécurité/médecine et interroge l'API Gemini.
+3.  **Réponse** : La réponse est renvoyée sous forme de JSON et injectée dynamiquement dans la conversation.
+
+---
+
 ## 👤 Auteurs
 Projet développé dans le cadre du cursus **5IIR** par **Yassir Benjima**.
