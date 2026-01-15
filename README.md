@@ -93,7 +93,7 @@ L'organisation des fichiers suit l'architecture standard de Django, structurée 
 
 ### 📁 Racine du Projet
 - **`manage.py`** : L'outil en ligne de commande de Django pour la gestion du projet (serveur, migrations, etc.).
-- **`db.sqlite3`** : La base de données locale par défaut.
+- **`db.sqlite3`** : La base de données locale. Le projet utilise le **Django ORM** pour interagir avec elle de manière transparente via les modèles Python sans écrire de SQL manuellement.
 - **`README.md`** : Documentation principale du projet.
 
 ---
